@@ -697,11 +697,18 @@
 
         /* RESPONSIVE - MOBILE */
         @media (max-width: 768px) {
-            /* Hero - compact */
+            /* Hero - compact but larger text */
             .hero-section { height: 70vh; }
-            .combined-name { font-size: clamp(2rem, 10vw, 4rem) !important; }
-            .north-reveal .north-title-img { width: clamp(180px, 60vw, 300px) !important; }
-            .presents-link a { font-size: 0.65rem; }
+            .presents-link { 
+                width: 100%; 
+                text-align: center;
+                left: 0 !important;
+                transform: none !important;
+            }
+            .presents-link.animate { transform: none !important; }
+            .presents-link a { font-size: 0.7rem; }
+            .combined-name { font-size: clamp(2.5rem, 12vw, 5rem) !important; }
+            .north-reveal .north-title-img { width: clamp(220px, 70vw, 400px) !important; }
             
             /* Polaroids - masonry columns for natural aspect ratios */
             .polaroid-section { padding: 2rem 1rem; min-height: auto; }
@@ -730,9 +737,10 @@
             
             /* Cinematic parallax - DISABLE parallax on mobile, just normal scroll */
             .cinematic-parallax { 
-                height: auto; 
-                clip-path: none;
-                -webkit-clip-path: none;
+                height: auto !important; 
+                min-height: 0 !important;
+                clip-path: none !important;
+                -webkit-clip-path: none !important;
                 background: var(--charcoal);
             }
             .cinematic-parallax img {
@@ -741,7 +749,10 @@
                 transform: none !important;
                 height: auto !important;
                 min-height: auto !important;
-                width: 100%;
+                min-width: auto !important;
+                width: 100% !important;
+                display: block !important;
+                z-index: 1 !important;
             }
             .parallax-text { position: relative; padding: 2rem; }
             .parallax-text.center, .parallax-text.bottom {
@@ -831,8 +842,17 @@
             .epic-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
             .epic-item:nth-child(5) { grid-column: span 2; grid-row: span 2; }
             
-            .epic-cinematic { height: auto; }
-            .epic-cinematic img.main { clip-path: none; }
+            .epic-cinematic { 
+                height: auto !important; 
+                min-height: 0 !important;
+                overflow: visible !important;
+            }
+            .epic-cinematic img.main { 
+                clip-path: none !important; 
+                height: auto !important;
+                width: 100% !important;
+                display: block !important;
+            }
             .joke-stamp { width: 80px !important; height: 80px !important; border-width: 4px; }
             
             /* Reception grid - compact */
@@ -862,9 +882,10 @@
             
             /* Final section - disable parallax, normal scroll */
             .final-section { 
-                height: auto; 
-                clip-path: none;
-                -webkit-clip-path: none;
+                height: auto !important; 
+                min-height: 0 !important;
+                clip-path: none !important;
+                -webkit-clip-path: none !important;
                 background: var(--charcoal);
             }
             .final-section > img {
@@ -873,7 +894,13 @@
                 transform: none !important;
                 height: auto !important;
                 min-height: auto !important;
-                width: 100%;
+                min-width: auto !important;
+                width: 100% !important;
+                display: block !important;
+                z-index: 1 !important;
+            }
+            .final-section .overlay {
+                display: none;
             }
             .final-text { 
                 position: relative; 
@@ -895,7 +922,8 @@
         /* RESPONSIVE - SMALL MOBILE */
         @media (max-width: 480px) {
             .hero-section { height: 60vh; }
-            .combined-name { font-size: clamp(1.8rem, 9vw, 3rem) !important; }
+            .combined-name { font-size: clamp(2rem, 11vw, 3.5rem) !important; }
+            .north-reveal .north-title-img { width: clamp(200px, 65vw, 350px) !important; }
             
             .polaroid-container { column-count: 2; }
             
