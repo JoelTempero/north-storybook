@@ -66,24 +66,12 @@
             height: 100%;
             width: 0%;
             border-radius: 2px;
-            background: linear-gradient(90deg, 
-                #C9A962 0%, 
-                #F5E6A3 20%, 
-                #C9A962 40%, 
-                #F5E6A3 60%, 
-                #C9A962 80%, 
-                #F5E6A3 100%);
-            background-size: 200% 100%;
-            animation: loadProgress 1s ease-out forwards, shimmer 0.5s linear infinite;
-            box-shadow: 0 0 10px rgba(201,169,98,0.6), 0 0 20px rgba(201,169,98,0.3);
+            background: #fff;
+            animation: loadProgress 1s ease-out forwards;
         }
         @keyframes loadProgress {
             0% { width: 0%; }
             100% { width: 100%; }
-        }
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
         }
         .loader-link {
             opacity: 0;
@@ -124,9 +112,13 @@
         }
         .presents-link {
             position: absolute; top: 5%; left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(-10px);
             opacity: 0;
-            animation: fadeInPresents 1s ease 2.5s forwards;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .presents-link.animate {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
         .presents-link a {
             font-family: var(--font-sans); font-weight: 300;
@@ -140,10 +132,6 @@
             transition: opacity 0.3s ease;
         }
         .presents-link a:hover { opacity: 1; }
-        @keyframes fadeInPresents {
-            0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-            100% { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
         .combined-name {
             font-family: var(--font-sans); font-weight: 200;
             font-size: clamp(3rem, 12vw, 10rem);
@@ -151,7 +139,12 @@
             text-shadow: 0 4px 40px rgba(0,0,0,0.6);
             line-height: 1;
             opacity: 0;
-            animation: fadeInCombined 1s ease 3.5s forwards;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .combined-name.animate {
+            opacity: 1;
+            transform: translateY(0);
         }
         .north-reveal {
             position: relative; display: inline-block;
@@ -161,8 +154,13 @@
             width: clamp(300px, 75vw, 900px);
             height: auto;
             opacity: 0;
+            transform: translateY(20px);
             filter: drop-shadow(0 4px 30px rgba(0,0,0,0.5));
-            animation: fadeInNorth 1s ease 5.5s forwards;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .north-reveal .north-title-img.animate {
+            opacity: 1;
+            transform: translateY(0);
         }
         @keyframes fadeInCombined {
             0% { opacity: 0; transform: translateY(30px); }
@@ -398,24 +396,20 @@
         .card-stack:hover .stack-card:nth-child(4) { transform: translateX(calc(25vw - 125px)) rotate(6deg); }
         .card-stack:hover .stack-card:nth-child(5) { transform: translateX(calc(50vw - 250px)) rotate(12deg); }
 
-        /* INTERACTIVE GALLERY - Random scattered mosaic with natural aspect ratios */
+        /* INTERACTIVE GALLERY - Large scattered images with natural aspect ratios */
         .interactive-section { 
             padding: 4rem 2rem; 
             background: var(--sage); 
-            min-height: 100vh;
+            min-height: 120vh;
             overflow: hidden;
         }
         .interactive-grid {
-            width: 100%; max-width: 1600px; margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 1.5rem;
-            padding: 2rem;
+            width: 100%; max-width: 1800px; margin: 0 auto;
+            position: relative;
+            min-height: 1400px;
         }
         .interactive-item {
-            position: relative;
+            position: absolute;
             border-radius: 12px; overflow: hidden;
             box-shadow: 0 15px 40px rgba(0,0,0,0.25);
             opacity: 0;
@@ -437,15 +431,15 @@
             z-index: 10;
         }
         .interactive-item:hover img { transform: scale(1.05); }
-        /* Varied widths - 59 is largest (3rd item) */
-        .interactive-item:nth-child(1) { width: 280px; --rot: -2deg; margin-top: 20px; }
-        .interactive-item:nth-child(2) { width: 320px; --rot: 3deg; margin-top: 60px; }
-        .interactive-item:nth-child(3) { width: 450px; --rot: -1deg; margin-top: 0; } /* 59 - LARGEST */
-        .interactive-item:nth-child(4) { width: 300px; --rot: 2deg; margin-top: 40px; }
-        .interactive-item:nth-child(5) { width: 260px; --rot: -3deg; margin-top: 80px; }
-        .interactive-item:nth-child(6) { width: 340px; --rot: 1deg; margin-top: 20px; }
-        .interactive-item:nth-child(7) { width: 290px; --rot: -2deg; margin-top: 50px; }
-        .interactive-item:nth-child(8) { width: 380px; --rot: 2deg; margin-top: 10px; }
+        /* Scattered absolute positioning - 59 is largest (3rd item) */
+        .interactive-item:nth-child(1) { width: 380px; --rot: -3deg; top: 0; left: 5%; }
+        .interactive-item:nth-child(2) { width: 420px; --rot: 4deg; top: 8%; left: 35%; }
+        .interactive-item:nth-child(3) { width: 550px; --rot: -2deg; top: 5%; right: 3%; } /* 59 - LARGEST */
+        .interactive-item:nth-child(4) { width: 400px; --rot: 3deg; top: 35%; left: 2%; }
+        .interactive-item:nth-child(5) { width: 360px; --rot: -4deg; top: 45%; left: 32%; }
+        .interactive-item:nth-child(6) { width: 440px; --rot: 2deg; top: 40%; right: 8%; }
+        .interactive-item:nth-child(7) { width: 390px; --rot: -3deg; top: 70%; left: 8%; }
+        .interactive-item:nth-child(8) { width: 480px; --rot: 3deg; top: 72%; right: 15%; }
 
         /* SOARING HEIGHTS */
         .soaring-section {
@@ -480,19 +474,15 @@
             50% { transform: translate(-50%, -50%) translateY(-40px); }
         }
 
-        /* OVERLAPPING GALLERY - Scattered with natural aspect ratios */
+        /* OVERLAPPING GALLERY - Large scattered with natural aspect ratios */
         .overlap-section { padding: 6rem 2rem; background: var(--cream); overflow: hidden; }
         .overlap-grid {
             width: 100%; max-width: 1800px; margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 1.5rem;
-            padding: 2rem 0;
+            position: relative;
+            min-height: 1800px;
         }
         .overlap-item {
-            position: relative;
+            position: absolute;
             border-radius: 10px; overflow: hidden;
             box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             opacity: 0;
@@ -509,19 +499,19 @@
             box-shadow: 0 35px 80px rgba(0,0,0,0.35);
         }
         .overlap-item img { width: 100%; height: auto; display: block; }
-        /* Varied widths and angles - natural aspect ratios */
-        .overlap-item:nth-child(1) { width: 280px; --angle: -2deg; margin-top: 0; }
-        .overlap-item:nth-child(2) { width: 240px; --angle: 3deg; margin-top: 50px; }
-        .overlap-item:nth-child(3) { width: 320px; --angle: -1deg; margin-top: 20px; }
-        .overlap-item:nth-child(4) { width: 260px; --angle: 2deg; margin-top: 70px; }
-        .overlap-item:nth-child(5) { width: 300px; --angle: -3deg; margin-top: 30px; }
-        .overlap-item:nth-child(6) { width: 250px; --angle: 1deg; margin-top: 60px; }
-        .overlap-item:nth-child(7) { width: 290px; --angle: -2deg; margin-top: 10px; }
-        .overlap-item:nth-child(8) { width: 270px; --angle: 4deg; margin-top: 80px; }
-        .overlap-item:nth-child(9) { width: 260px; --angle: -1deg; margin-top: 40px; }
-        .overlap-item:nth-child(10) { width: 310px; --angle: 2deg; margin-top: 20px; }
-        .overlap-item:nth-child(11) { width: 240px; --angle: -3deg; margin-top: 60px; }
-        .overlap-item:nth-child(12) { width: 280px; --angle: 1deg; margin-top: 30px; }
+        /* Scattered absolute positioning */
+        .overlap-item:nth-child(1) { width: 380px; --angle: -2deg; top: 0; left: 3%; }
+        .overlap-item:nth-child(2) { width: 340px; --angle: 3deg; top: 5%; left: 32%; }
+        .overlap-item:nth-child(3) { width: 420px; --angle: -1deg; top: 2%; right: 5%; }
+        .overlap-item:nth-child(4) { width: 360px; --angle: 2deg; top: 22%; left: 8%; }
+        .overlap-item:nth-child(5) { width: 400px; --angle: -3deg; top: 28%; right: 25%; }
+        .overlap-item:nth-child(6) { width: 350px; --angle: 1deg; top: 25%; right: 2%; }
+        .overlap-item:nth-child(7) { width: 390px; --angle: -2deg; top: 48%; left: 2%; }
+        .overlap-item:nth-child(8) { width: 370px; --angle: 4deg; top: 52%; left: 35%; }
+        .overlap-item:nth-child(9) { width: 360px; --angle: -1deg; top: 50%; right: 8%; }
+        .overlap-item:nth-child(10) { width: 410px; --angle: 2deg; top: 72%; left: 5%; }
+        .overlap-item:nth-child(11) { width: 340px; --angle: -3deg; top: 75%; left: 38%; }
+        .overlap-item:nth-child(12) { width: 380px; --angle: 1deg; top: 73%; right: 5%; }
 
         /* Section removed - diagonal mask converted to cinematic parallax */
 
@@ -672,9 +662,11 @@
             .epic-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: auto; }
             .epic-item:nth-child(n) { grid-column: span 1; grid-row: span 1; }
             .epic-item:nth-child(1), .epic-item:nth-child(5) { grid-column: span 2; }
-            .overlap-item:nth-child(n) { width: 45%; }
-            .interactive-item:nth-child(n) { width: 45%; }
-            .interactive-item:nth-child(3) { width: 60%; }
+            .interactive-grid { min-height: 1000px; }
+            .interactive-item:nth-child(n) { width: 300px !important; }
+            .interactive-item:nth-child(3) { width: 400px !important; }
+            .overlap-grid { min-height: 1400px; }
+            .overlap-item:nth-child(n) { width: 280px !important; }
         }
         @media (max-width: 1024px) {
             .duo-panel { gap: 2rem; }
@@ -708,8 +700,20 @@
             .horizontal-item { width: 260px; height: 360px; }
             .reception-grid { grid-template-columns: repeat(4, 1fr); }
             .reception-item:nth-child(n) { grid-column: span 2; grid-row: span 2; }
-            .overlap-item:nth-child(n) { width: calc(50% - 1rem); margin-top: 0 !important; }
-            .interactive-item:nth-child(n) { width: calc(50% - 1rem); margin-top: 0 !important; }
+            /* Switch to flow layout for galleries on mobile */
+            .interactive-grid, .overlap-grid { 
+                min-height: auto !important; 
+                display: flex; 
+                flex-wrap: wrap; 
+                justify-content: center;
+                gap: 1rem;
+            }
+            .interactive-item, .overlap-item { 
+                position: relative !important; 
+                top: auto !important; left: auto !important; right: auto !important;
+                width: calc(50% - 1rem) !important;
+                margin: 0 !important;
+            }
         }
         @media (max-width: 480px) {
             .masonry-grid { column-count: 1; }
@@ -719,8 +723,7 @@
             .reception-grid { grid-template-columns: 1fr 1fr; }
             .reception-item:nth-child(n) { grid-column: span 1; grid-row: span 2; }
             .card-stack { width: 280px; height: 400px; }
-            .overlap-item:nth-child(n) { width: 100%; }
-            .interactive-item:nth-child(n) { width: 100%; }
+            .interactive-item, .overlap-item { width: 100% !important; }
         }
     </style>
 </head>
@@ -1022,9 +1025,19 @@
     </section>
 
     <script>
-        // Loader
+        // Loader and hero animation sequence
         window.addEventListener('load', () => {
-            setTimeout(() => { document.querySelector('.loader').classList.add('hidden'); }, 1200);
+            setTimeout(() => { 
+                document.querySelector('.loader').classList.add('hidden');
+                // Start hero animations after loader hides
+                setTimeout(() => {
+                    document.querySelector('.presents-link').classList.add('animate');
+                    document.querySelector('.combined-name').classList.add('animate');
+                }, 100);
+                setTimeout(() => {
+                    document.querySelector('.north-title-img').classList.add('animate');
+                }, 1100);
+            }, 1200);
         });
 
         // Reveal animations with staggered effect
