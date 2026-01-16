@@ -400,16 +400,19 @@
         .interactive-section { 
             padding: 4rem 2rem; 
             background: var(--sage); 
-            min-height: 120vh;
-            overflow: hidden;
+            overflow: visible;
         }
         .interactive-grid {
-            width: 100%; max-width: 1800px; margin: 0 auto;
-            position: relative;
-            min-height: 1400px;
+            width: 100%; max-width: 1600px; margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 2rem;
+            padding: 2rem;
         }
         .interactive-item {
-            position: absolute;
+            position: relative;
             border-radius: 12px; overflow: hidden;
             box-shadow: 0 15px 40px rgba(0,0,0,0.25);
             opacity: 0;
@@ -431,15 +434,15 @@
             z-index: 10;
         }
         .interactive-item:hover img { transform: scale(1.05); }
-        /* Scattered absolute positioning - 59 is largest (3rd item) */
-        .interactive-item:nth-child(1) { width: 380px; --rot: -3deg; top: 0; left: 5%; }
-        .interactive-item:nth-child(2) { width: 420px; --rot: 4deg; top: 8%; left: 35%; }
-        .interactive-item:nth-child(3) { width: 550px; --rot: -2deg; top: 5%; right: 3%; } /* 59 - LARGEST */
-        .interactive-item:nth-child(4) { width: 400px; --rot: 3deg; top: 35%; left: 2%; }
-        .interactive-item:nth-child(5) { width: 360px; --rot: -4deg; top: 45%; left: 32%; }
-        .interactive-item:nth-child(6) { width: 440px; --rot: 2deg; top: 40%; right: 8%; }
-        .interactive-item:nth-child(7) { width: 390px; --rot: -3deg; top: 70%; left: 8%; }
-        .interactive-item:nth-child(8) { width: 480px; --rot: 3deg; top: 72%; right: 15%; }
+        /* Large varied widths - 59 is largest (3rd item) */
+        .interactive-item:nth-child(1) { width: 420px; --rot: -3deg; }
+        .interactive-item:nth-child(2) { width: 480px; --rot: 4deg; }
+        .interactive-item:nth-child(3) { width: 550px; --rot: -2deg; } /* 59 - LARGEST */
+        .interactive-item:nth-child(4) { width: 450px; --rot: 3deg; }
+        .interactive-item:nth-child(5) { width: 400px; --rot: -4deg; }
+        .interactive-item:nth-child(6) { width: 500px; --rot: 2deg; }
+        .interactive-item:nth-child(7) { width: 430px; --rot: -3deg; }
+        .interactive-item:nth-child(8) { width: 520px; --rot: 3deg; }
 
         /* SOARING HEIGHTS */
         .soaring-section {
@@ -475,14 +478,18 @@
         }
 
         /* OVERLAPPING GALLERY - Large scattered with natural aspect ratios */
-        .overlap-section { padding: 6rem 2rem; background: var(--cream); overflow: hidden; }
+        .overlap-section { padding: 4rem 2rem; background: var(--cream); overflow: visible; }
         .overlap-grid {
-            width: 100%; max-width: 1800px; margin: 0 auto;
-            position: relative;
-            min-height: 1800px;
+            width: 100%; max-width: 1600px; margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 2rem;
+            padding: 2rem;
         }
         .overlap-item {
-            position: absolute;
+            position: relative;
             border-radius: 10px; overflow: hidden;
             box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             opacity: 0;
@@ -499,19 +506,19 @@
             box-shadow: 0 35px 80px rgba(0,0,0,0.35);
         }
         .overlap-item img { width: 100%; height: auto; display: block; }
-        /* Scattered absolute positioning */
-        .overlap-item:nth-child(1) { width: 380px; --angle: -2deg; top: 0; left: 3%; }
-        .overlap-item:nth-child(2) { width: 340px; --angle: 3deg; top: 5%; left: 32%; }
-        .overlap-item:nth-child(3) { width: 420px; --angle: -1deg; top: 2%; right: 5%; }
-        .overlap-item:nth-child(4) { width: 360px; --angle: 2deg; top: 22%; left: 8%; }
-        .overlap-item:nth-child(5) { width: 400px; --angle: -3deg; top: 28%; right: 25%; }
-        .overlap-item:nth-child(6) { width: 350px; --angle: 1deg; top: 25%; right: 2%; }
-        .overlap-item:nth-child(7) { width: 390px; --angle: -2deg; top: 48%; left: 2%; }
-        .overlap-item:nth-child(8) { width: 370px; --angle: 4deg; top: 52%; left: 35%; }
-        .overlap-item:nth-child(9) { width: 360px; --angle: -1deg; top: 50%; right: 8%; }
-        .overlap-item:nth-child(10) { width: 410px; --angle: 2deg; top: 72%; left: 5%; }
-        .overlap-item:nth-child(11) { width: 340px; --angle: -3deg; top: 75%; left: 38%; }
-        .overlap-item:nth-child(12) { width: 380px; --angle: 1deg; top: 73%; right: 5%; }
+        /* Large varied widths */
+        .overlap-item:nth-child(1) { width: 420px; --angle: -2deg; }
+        .overlap-item:nth-child(2) { width: 380px; --angle: 3deg; }
+        .overlap-item:nth-child(3) { width: 460px; --angle: -1deg; }
+        .overlap-item:nth-child(4) { width: 400px; --angle: 2deg; }
+        .overlap-item:nth-child(5) { width: 440px; --angle: -3deg; }
+        .overlap-item:nth-child(6) { width: 390px; --angle: 1deg; }
+        .overlap-item:nth-child(7) { width: 430px; --angle: -2deg; }
+        .overlap-item:nth-child(8) { width: 410px; --angle: 4deg; }
+        .overlap-item:nth-child(9) { width: 400px; --angle: -1deg; }
+        .overlap-item:nth-child(10) { width: 450px; --angle: 2deg; }
+        .overlap-item:nth-child(11) { width: 380px; --angle: -3deg; }
+        .overlap-item:nth-child(12) { width: 420px; --angle: 1deg; }
 
         /* Section removed - diagonal mask converted to cinematic parallax */
 
@@ -662,11 +669,9 @@
             .epic-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: auto; }
             .epic-item:nth-child(n) { grid-column: span 1; grid-row: span 1; }
             .epic-item:nth-child(1), .epic-item:nth-child(5) { grid-column: span 2; }
-            .interactive-grid { min-height: 1000px; }
-            .interactive-item:nth-child(n) { width: 300px !important; }
-            .interactive-item:nth-child(3) { width: 400px !important; }
-            .overlap-grid { min-height: 1400px; }
-            .overlap-item:nth-child(n) { width: 280px !important; }
+            .interactive-item:nth-child(n) { width: 45% !important; }
+            .interactive-item:nth-child(3) { width: 55% !important; }
+            .overlap-item:nth-child(n) { width: 45% !important; }
         }
         @media (max-width: 1024px) {
             .duo-panel { gap: 2rem; }
@@ -700,20 +705,7 @@
             .horizontal-item { width: 260px; height: 360px; }
             .reception-grid { grid-template-columns: repeat(4, 1fr); }
             .reception-item:nth-child(n) { grid-column: span 2; grid-row: span 2; }
-            /* Switch to flow layout for galleries on mobile */
-            .interactive-grid, .overlap-grid { 
-                min-height: auto !important; 
-                display: flex; 
-                flex-wrap: wrap; 
-                justify-content: center;
-                gap: 1rem;
-            }
-            .interactive-item, .overlap-item { 
-                position: relative !important; 
-                top: auto !important; left: auto !important; right: auto !important;
-                width: calc(50% - 1rem) !important;
-                margin: 0 !important;
-            }
+            .interactive-item:nth-child(n), .overlap-item:nth-child(n) { width: calc(50% - 1rem) !important; }
         }
         @media (max-width: 480px) {
             .masonry-grid { column-count: 1; }
@@ -723,7 +715,7 @@
             .reception-grid { grid-template-columns: 1fr 1fr; }
             .reception-item:nth-child(n) { grid-column: span 1; grid-row: span 2; }
             .card-stack { width: 280px; height: 400px; }
-            .interactive-item, .overlap-item { width: 100% !important; }
+            .interactive-item:nth-child(n), .overlap-item:nth-child(n) { width: 100% !important; }
         }
     </style>
 </head>
@@ -1037,7 +1029,7 @@
                 setTimeout(() => {
                     document.querySelector('.north-title-img').classList.add('animate');
                 }, 1100);
-            }, 1200);
+            }, 1500);
         });
 
         // Reveal animations with staggered effect
