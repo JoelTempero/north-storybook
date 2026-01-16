@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seb & Sarita North</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #FAF7F2;
+            --warm-white: #FFFEF9;
+            --blush: #E8D5D0;
+            --rose: #C4A4A0;
+            --terracotta: #B87A6A;
+            --deep-brown: #3D2E2A;
+            --charcoal: #2A2420;
+            --gold: #C9A962;
+            --sage: #9CAF88;
+            --font-script: 'Pinyon Script', cursive;
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Outfit', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-serif);
+            background: var(--charcoal);
+            color: var(--cream);
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        .loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--charcoal);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .loader.hidden { opacity: 0; visibility: hidden; }
+        .loader-text {
+            font-family: var(--font-script);
+            font-size: clamp(2rem, 8vw, 5rem);
+            color: var(--cream);
+            opacity: 0;
+            animation: fadeInOut 2s ease-in-out forwards;
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* SECTION 1: NAME REVEAL */
+        .name-reveal-container { height: 400vh; position: relative; }
+        .name-reveal-sticky {
+            position: sticky; top: 0; height: 100vh; overflow: hidden;
+        }
+        .solo-panel {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.6s ease;
+        }
+        .solo-panel.active { opacity: 1; }
+        .solo-panel img { width: 100%; height: 100%; object-fit: cover; }
+        .solo-name {
+            position: absolute;
+            font-family: var(--font-script);
+            font-size: clamp(3rem, 10vw, 8rem);
+            color: var(--cream);
+            text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        .solo-name.seb { bottom: 15%; left: 10%; }
+        .solo-name.sarita { bottom: 15%; right: 10%; }
+        .final-reveal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transition: opacity 0.6s ease;
+        }
+        .final-reveal.active { opacity: 1; }
+        .final-reveal > img:first-child { width: 100%; height: 100%; object-fit: cover; }
+        .final-names {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center; z-index: 10;
+        }
+        .final-names .combined {
+            font-family: var(--font-script);
+            font-size: clamp(3rem, 12vw, 10rem);
+            color: var(--cream);
+            text-shadow: 0 4px 40px rgba(0,0,0,0.6);
+            line-height: 1;
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .final-names .combined.visible { opacity: 1; transform: translateY(0); }
+        .final-names .north {
+            font-family: var(--font-sans);
+            font-weight: 200;
+            font-size: clamp(1.5rem, 5vw, 4rem);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-top: 1rem;
+            opacity: 0; transform: translateY(20px);
+            transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+        }
+        .final-names .north.visible { opacity: 1; transform: translateY(0); }
+        .crown-image {
+            position: absolute; bottom: 8%; right: 8%;
+            width: clamp(80px, 15vw, 180px); height: auto;
+            z-index: 20; opacity: 0;
+            transform: rotate(-15deg);
+            transition: opacity 0.6s ease 0.5s, transform 0.6s ease 0.5s;
+            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.4));
+        }
+        .crown-image.visible { opacity: 1; transform: rotate(-10deg); }
+        .cinematic-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(42,36,32,0.2) 0%, transparent 30%, transparent 70%, rgba(42,36,32,0.4) 100%);
+            pointer-events: none;
+        }
+
+        /* POLAROID SCATTER */
+        .polaroid-section {
+            min-height: 100vh; padding: 4rem 2rem;
+            position: relative; background: var(--cream); overflow: hidden;
+        }
+        .polaroid-container {
+            max-width: 1600px; margin: 0 auto;
+            min-height: 90vh; position: relative;
+        }
+        .polaroid {
+            position: absolute; background: white;
+            padding: 0.8rem 0.8rem 2.5rem 0.8rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+            opacity: 0;
+            transform: translateY(100px) rotate(var(--rotation, 0deg));
+        }
+        .polaroid.visible {
+            opacity: 1;
+            transform: translateY(0) rotate(var(--rotation, 0deg));
+        }
+        .polaroid:hover {
+            transform: translateY(-10px) rotate(0deg) scale(1.08) !important;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+            z-index: 100 !important;
+        }
+        .polaroid img { width: 100%; height: auto; display: block; }
+        .polaroid.large { padding: 1rem 1rem 3rem 1rem; }
+
+        /* HORIZONTAL SCROLL */
+        .horizontal-section { padding: 4rem 0; background: var(--charcoal); overflow: hidden; }
+        .horizontal-track {
+            display: flex; gap: 1.5rem; padding: 0 2rem;
+            animation: horizontalScroll 40s linear infinite;
+        }
+        .horizontal-track:hover { animation-play-state: paused; }
+        @keyframes horizontalScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .horizontal-item {
+            flex-shrink: 0; width: 320px; height: 450px;
+            position: relative; overflow: hidden; border-radius: 4px;
+        }
+        .horizontal-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .horizontal-item:hover img { transform: scale(1.08); }
+
+        /* SOLO SPOTLIGHT */
+        .solo-spotlight {
+            height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--deep-brown);
+            position: relative; overflow: hidden;
+        }
+        .solo-spotlight::before {
+            content: '';
+            position: absolute; top: 50%; left: 50%;
+            width: 120%; height: 120%;
+            background: radial-gradient(circle, transparent 30%, var(--deep-brown) 70%);
+            transform: translate(-50%, -50%);
+            pointer-events: none; z-index: 2;
+        }
+        .solo-spotlight-image {
+            width: 70%; max-width: 800px; height: 80%;
+            object-fit: cover; border-radius: 8px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            opacity: 0; transform: scale(0.9);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .solo-spotlight-image.visible { opacity: 1; transform: scale(1); }
+
+        /* CINEMATIC STICKY */
+        .cinematic-sticky-container { height: 150vh; position: relative; }
+        .cinematic-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+        .cinematic-sticky img { width: 100%; height: 100%; object-fit: cover; }
+        .cinematic-text {
+            position: absolute; bottom: 10%; left: 50%;
+            transform: translateX(-50%);
+            text-align: center; z-index: 5;
+        }
+        .cinematic-text h2 {
+            font-family: var(--font-script);
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            color: var(--cream);
+            text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+        }
+
+        /* MASONRY GRID */
+        .masonry-section { padding: 4rem 2rem; background: var(--cream); }
+        .masonry-grid {
+            max-width: 1400px; margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem; grid-auto-rows: 180px;
+        }
+        .masonry-item {
+            position: relative; overflow: hidden; border-radius: 6px;
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .masonry-item.visible { opacity: 1; transform: translateY(0); }
+        .masonry-item.tall { grid-row: span 2; }
+        .masonry-item.wide { grid-column: span 2; }
+        .masonry-item.large { grid-column: span 2; grid-row: span 2; }
+        .masonry-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .masonry-item:hover img { transform: scale(1.06); }
+
+        /* CARD STACK */
+        .card-stack-section {
+            min-height: 100vh; padding: 6rem 2rem;
+            background: var(--charcoal);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .card-stack { position: relative; width: 320px; height: 450px; perspective: 1000px; }
+        .stack-card {
+            position: absolute; width: 100%; height: 100%;
+            background: white; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .stack-card img { width: 100%; height: 100%; object-fit: cover; }
+        .stack-card:nth-child(1) { transform: translateZ(0) rotate(-4deg); z-index: 5; }
+        .stack-card:nth-child(2) { transform: translateZ(-15px) translateX(25px) rotate(3deg); z-index: 4; }
+        .stack-card:nth-child(3) { transform: translateZ(-30px) translateX(50px) rotate(-2deg); z-index: 3; }
+        .stack-card:nth-child(4) { transform: translateZ(-45px) translateX(75px) rotate(5deg); z-index: 2; }
+        .stack-card:nth-child(5) { transform: translateZ(-60px) translateX(100px) rotate(-3deg); z-index: 1; }
+        .card-stack:hover .stack-card:nth-child(1) { transform: translateX(-180px) rotate(-15deg); }
+        .card-stack:hover .stack-card:nth-child(2) { transform: translateX(-90px) rotate(-8deg); }
+        .card-stack:hover .stack-card:nth-child(3) { transform: translateX(0) rotate(0deg); }
+        .card-stack:hover .stack-card:nth-child(4) { transform: translateX(90px) rotate(8deg); }
+        .card-stack:hover .stack-card:nth-child(5) { transform: translateX(180px) rotate(15deg); }
+
+        /* DIAGONAL GALLERY */
+        .diagonal-section { padding: 4rem 1rem; background: var(--sage); }
+        .diagonal-grid {
+            max-width: 1400px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+        }
+        .diagonal-item {
+            aspect-ratio: 1; overflow: hidden; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            opacity: 0; transform: translateY(30px) rotate(-3deg);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .diagonal-item.visible { opacity: 1; transform: translateY(0) rotate(0deg); }
+        .diagonal-item:nth-child(even) { transform: translateY(30px) rotate(3deg); }
+        .diagonal-item.visible:nth-child(even) { transform: translateY(0) rotate(0deg); }
+        .diagonal-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .diagonal-item:hover img { transform: scale(1.1); }
+
+        /* SOARING HEIGHTS */
+        .soaring-section {
+            height: 100vh;
+            display: grid; grid-template-columns: 1fr 1fr;
+            background: var(--deep-brown); overflow: hidden;
+        }
+        .soaring-text { display: flex; align-items: center; justify-content: center; padding: 4rem; }
+        .soaring-text h2 {
+            font-family: var(--font-script);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            color: var(--cream); text-align: center; line-height: 1.2;
+        }
+        .soaring-image { position: relative; overflow: hidden; }
+        .soaring-image .background { width: 100%; height: 100%; object-fit: cover; }
+        .soaring-image .floating-element {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; height: auto;
+            animation: floatUpDown 4s ease-in-out infinite;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
+        }
+        @keyframes floatUpDown {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-30px); }
+        }
+
+        /* OVERLAPPING GALLERY */
+        .overlap-section { padding: 6rem 2rem; background: var(--cream); }
+        .overlap-grid {
+            max-width: 1400px; margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: repeat(6, 100px);
+            gap: 1rem;
+        }
+        .overlap-item {
+            overflow: hidden; border-radius: 8px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            opacity: 0; transform: scale(0.9);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .overlap-item.visible { opacity: 1; transform: scale(1); }
+        .overlap-item:hover { z-index: 10; transform: scale(1.02); }
+        .overlap-item img { width: 100%; height: 100%; object-fit: cover; }
+        .overlap-item:nth-child(1) { grid-column: 1 / 5; grid-row: 1 / 3; }
+        .overlap-item:nth-child(2) { grid-column: 4 / 8; grid-row: 2 / 5; z-index: 2; }
+        .overlap-item:nth-child(3) { grid-column: 7 / 10; grid-row: 1 / 3; }
+        .overlap-item:nth-child(4) { grid-column: 9 / 13; grid-row: 2 / 4; }
+        .overlap-item:nth-child(5) { grid-column: 1 / 4; grid-row: 3 / 5; }
+        .overlap-item:nth-child(6) { grid-column: 3 / 6; grid-row: 4 / 7; z-index: 2; }
+        .overlap-item:nth-child(7) { grid-column: 6 / 9; grid-row: 4 / 6; }
+        .overlap-item:nth-child(8) { grid-column: 8 / 11; grid-row: 3 / 6; z-index: 2; }
+        .overlap-item:nth-child(9) { grid-column: 10 / 13; grid-row: 4 / 7; }
+        .overlap-item:nth-child(10) { grid-column: 5 / 8; grid-row: 5 / 7; z-index: 3; }
+
+        /* DIAGONAL MASK */
+        .diagonal-mask-section { position: relative; height: 200vh; }
+        .diagonal-mask-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+        .diagonal-panel { position: absolute; top: 0; width: 100%; height: 100%; }
+        .diagonal-panel img { width: 100%; height: 100%; object-fit: cover; }
+        .diagonal-panel:first-child { clip-path: polygon(0 0, 60% 0, 40% 100%, 0 100%); z-index: 2; }
+        .diagonal-panel:last-child { z-index: 1; }
+
+        /* EPIC GALLERY */
+        .epic-gallery-section {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--deep-brown) 100%);
+            position: relative; overflow: hidden;
+        }
+        .epic-gallery-section::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(201,169,98,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(184,122,106,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .epic-grid {
+            max-width: 1600px; margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(4, 150px);
+            gap: 1rem;
+        }
+        .epic-item {
+            overflow: hidden; border-radius: 8px; position: relative;
+            opacity: 0; transform: scale(0.8) rotate(-5deg);
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .epic-item.visible { opacity: 1; transform: scale(1) rotate(0deg); }
+        .epic-item::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(201,169,98,0.2) 0%, transparent 50%);
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .epic-item:hover::after { opacity: 1; }
+        .epic-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .epic-item:hover img { transform: scale(1.1); }
+        .epic-item:nth-child(1) { grid-column: 1 / 3; grid-row: 1 / 3; }
+        .epic-item:nth-child(2) { grid-column: 3 / 4; grid-row: 1 / 2; }
+        .epic-item:nth-child(3) { grid-column: 4 / 6; grid-row: 1 / 2; }
+        .epic-item:nth-child(4) { grid-column: 6 / 7; grid-row: 1 / 3; }
+        .epic-item:nth-child(5) { grid-column: 3 / 5; grid-row: 2 / 4; }
+        .epic-item:nth-child(6) { grid-column: 5 / 6; grid-row: 2 / 3; }
+        .epic-item:nth-child(7) { grid-column: 1 / 2; grid-row: 3 / 5; }
+        .epic-item:nth-child(8) { grid-column: 2 / 3; grid-row: 3 / 4; }
+        .epic-item:nth-child(9) { grid-column: 5 / 7; grid-row: 3 / 5; }
+        .epic-item:nth-child(10) { grid-column: 2 / 4; grid-row: 4 / 5; }
+        .epic-item:nth-child(11) { grid-column: 4 / 5; grid-row: 4 / 5; }
+
+        .epic-cinematic { position: relative; height: 100vh; overflow: hidden; }
+        .epic-cinematic img.main {
+            width: 100%; height: 100%; object-fit: cover;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 70% 100%, 0 100%);
+        }
+        .joke-stamp {
+            position: absolute; bottom: 5%; right: 5%;
+            width: clamp(100px, 20vw, 200px); height: clamp(100px, 20vw, 200px);
+            border-radius: 50%; overflow: hidden;
+            border: 6px solid var(--gold);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            transform: rotate(12deg);
+            animation: stampWobble 3s ease-in-out infinite;
+        }
+        @keyframes stampWobble {
+            0%, 100% { transform: rotate(12deg) scale(1); }
+            50% { transform: rotate(8deg) scale(1.05); }
+        }
+        .joke-stamp img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* CIRCLE GALLERY */
+        .circle-section { padding: 6rem 2rem; background: var(--deep-brown); }
+        .circle-grid {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem;
+        }
+        .circle-item {
+            aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+            opacity: 0; transform: scale(0) rotate(180deg);
+            transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .circle-item.visible { opacity: 1; transform: scale(1) rotate(0deg); }
+        .circle-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .circle-item:hover img { transform: scale(1.15) rotate(5deg); }
+
+        /* FILM STRIPS */
+        .filmstrip-section { padding: 4rem 0; background: #0a0908; overflow: hidden; }
+        .filmstrip { position: relative; padding: 25px 0; margin-bottom: 2rem; }
+        .filmstrip::before, .filmstrip::after {
+            content: ''; position: absolute; left: 0; right: 0; height: 20px; background: #1a1a1a;
+        }
+        .filmstrip::before { top: 0; }
+        .filmstrip::after { bottom: 0; }
+        .filmstrip-track { display: flex; gap: 8px; padding: 5px 0; }
+        .filmstrip-track.scroll-left { animation: filmScrollLeft 30s linear infinite; }
+        .filmstrip-track.scroll-right { animation: filmScrollRight 35s linear infinite; }
+        @keyframes filmScrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes filmScrollRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+        .filmstrip-frame { flex-shrink: 0; width: 180px; height: 270px; background: white; padding: 4px; }
+        .filmstrip-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* FINAL SECTION */
+        .final-section { height: 100vh; position: relative; overflow: hidden; }
+        .final-section > img { width: 100%; height: 100%; object-fit: cover; }
+        .final-section .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(42,36,32,0.7) 0%, transparent 50%);
+        }
+        .final-text {
+            position: absolute; bottom: 15%; left: 50%;
+            transform: translateX(-50%); text-align: center; z-index: 5;
+        }
+        .final-text h2 {
+            font-family: var(--font-script);
+            font-size: clamp(4rem, 12vw, 10rem);
+            color: var(--cream);
+            text-shadow: 0 4px 40px rgba(0,0,0,0.5);
+        }
+        .footer-credit { position: absolute; bottom: 3%; right: 5%; z-index: 10; }
+        .footer-credit a {
+            display: flex; align-items: center; gap: 0.5rem;
+            text-decoration: none; color: var(--cream);
+            opacity: 0.8; transition: opacity 0.3s ease;
+        }
+        .footer-credit a:hover { opacity: 1; }
+        .footer-credit svg { width: 28px; height: 28px; }
+        .footer-credit span { font-family: var(--font-sans); font-size: 0.8rem; letter-spacing: 0.1em; }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .masonry-grid { grid-template-columns: repeat(3, 1fr); }
+            .epic-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: auto; }
+            .epic-item:nth-child(n) { grid-column: span 1; grid-row: span 1; }
+            .epic-item:nth-child(1), .epic-item:nth-child(5) { grid-column: span 2; }
+            .overlap-grid { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
+            .overlap-item:nth-child(n) { grid-column: span 1; grid-row: span 1; }
+            .diagonal-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .soaring-section { grid-template-columns: 1fr; height: auto; }
+            .soaring-text { padding: 4rem 2rem; }
+            .soaring-image { height: 60vh; }
+            .masonry-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
+            .masonry-item.large, .masonry-item.wide { grid-column: span 1; }
+            .masonry-item.tall { grid-row: span 1; }
+            .card-stack { width: 280px; height: 380px; }
+            .card-stack:hover .stack-card:nth-child(1) { transform: translateY(-100px) rotate(-10deg); }
+            .card-stack:hover .stack-card:nth-child(2) { transform: translateY(-50px) rotate(-5deg); }
+            .card-stack:hover .stack-card:nth-child(3) { transform: translateY(0) rotate(0deg); }
+            .card-stack:hover .stack-card:nth-child(4) { transform: translateY(50px) rotate(5deg); }
+            .card-stack:hover .stack-card:nth-child(5) { transform: translateY(100px) rotate(10deg); }
+            .circle-grid { grid-template-columns: repeat(2, 1fr); }
+            .polaroid {
+                position: relative !important; margin: 0.5rem;
+                width: calc(50% - 1rem) !important;
+                left: auto !important; right: auto !important; top: auto !important;
+            }
+            .polaroid-container { display: flex; flex-wrap: wrap; justify-content: center; min-height: auto; }
+            .horizontal-item { width: 260px; height: 360px; }
+            .diagonal-panel:first-child { clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); }
+        }
+        @media (max-width: 480px) {
+            .masonry-grid { grid-template-columns: 1fr; }
+            .epic-grid { grid-template-columns: repeat(2, 1fr); }
+            .circle-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+            .polaroid { width: calc(100% - 1rem) !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"><span class="loader-text">North</span></div>
+
+    <!-- SECTION 1: NAME REVEAL -->
+    <section class="name-reveal-container">
+        <div class="name-reveal-sticky">
+            <div class="solo-panel" id="seb-panel">
+                <img src="images/North-Storybook-48.jpg" alt="Seb">
+                <span class="solo-name seb">Seb Gray</span>
+            </div>
+            <div class="solo-panel" id="sarita-panel">
+                <img src="images/North-Storybook-46.jpg" alt="Sarita">
+                <span class="solo-name sarita">Sarita Fawcett</span>
+            </div>
+            <div class="final-reveal" id="final-reveal">
+                <img src="images/North-Storybook-3.jpg" alt="Seb & Sarita North">
+                <div class="cinematic-overlay"></div>
+                <div class="final-names">
+                    <div class="combined" id="combined-names">Seb & Sarita</div>
+                    <div class="north" id="north-text">North</div>
+                </div>
+                <img src="images/Crown.png" alt="Crown" class="crown-image" id="crown">
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: POLAROID SCATTER -->
+    <section class="polaroid-section">
+        <div class="polaroid-container">
+            <div class="polaroid" style="--rotation: -12deg; width: 180px; top: 5%; left: 3%;"><img src="images/North-Storybook-4.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 8deg; width: 160px; top: 8%; left: 22%;"><img src="images/North-Storybook-1.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -5deg; width: 170px; top: 3%; left: 42%;"><img src="images/North-Storybook-2.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 15deg; width: 165px; top: 10%; right: 20%;"><img src="images/North-Storybook-5.jpg" alt=""></div>
+            <div class="polaroid large" style="--rotation: -3deg; width: 240px; top: 15%; right: 3%;"><img src="images/North-Storybook-6.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 10deg; width: 175px; top: 45%; left: 5%;"><img src="images/North-Storybook-7.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -18deg; width: 155px; top: 50%; left: 28%;"><img src="images/North-Storybook-8.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 6deg; width: 185px; top: 48%; right: 30%;"><img src="images/North-Storybook-9.jpg" alt=""></div>
+            <div class="polaroid large" style="--rotation: -8deg; width: 260px; top: 55%; right: 5%;"><img src="images/North-Storybook-10.jpg" alt=""></div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: HORIZONTAL SCROLL -->
+    <section class="horizontal-section">
+        <div class="horizontal-track">
+            <div class="horizontal-item"><img src="images/North-Storybook-24.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-11.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-12.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-14.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-13.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-18.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-19.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-20.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-21.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-23.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-24.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-11.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-12.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-14.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-13.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-18.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-19.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-20.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-21.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-23.jpg" alt=""></div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: SOLO SPOTLIGHT -->
+    <section class="solo-spotlight">
+        <img src="images/North-Storybook-15.jpg" alt="Hugs" class="solo-spotlight-image">
+    </section>
+
+    <!-- SECTION 5: CEREMONY -->
+    <div class="cinematic-sticky-container">
+        <div class="cinematic-sticky">
+            <img src="images/North-Storybook-22.jpg" alt="Ceremony">
+            <div class="cinematic-overlay"></div>
+        </div>
+    </div>
+    <section class="masonry-section">
+        <div class="masonry-grid">
+            <div class="masonry-item tall"><img src="images/North-Storybook-16.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-17.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-25.jpg" alt=""></div>
+            <div class="masonry-item tall"><img src="images/North-Storybook-26.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-27.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-28.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-29.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-34.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-35.jpg" alt=""></div>
+            <div class="masonry-item tall"><img src="images/North-Storybook-36.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-37.jpg" alt=""></div>
+            <div class="masonry-item large"><img src="images/North-Storybook-38.jpg" alt=""></div>
+            <div class="masonry-item large"><img src="images/North-Storybook-41.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-43.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-45.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-39.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-40.jpg" alt=""></div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: CARD STACK -->
+    <div class="cinematic-sticky-container">
+        <div class="cinematic-sticky">
+            <img src="images/North-Storybook-31.jpg" alt="Ceremony">
+            <div class="cinematic-overlay"></div>
+        </div>
+    </div>
+    <section class="card-stack-section">
+        <div class="card-stack">
+            <div class="stack-card"><img src="images/North-Storybook-30.jpg" alt=""></div>
+            <div class="stack-card"><img src="images/North-Storybook-32.jpg" alt=""></div>
+            <div class="stack-card"><img src="images/North-Storybook-33.jpg" alt=""></div>
+            <div class="stack-card"><img src="images/North-Storybook-42.jpg" alt=""></div>
+            <div class="stack-card"><img src="images/North-Storybook-47.jpg" alt=""></div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: ADVENTURES -->
+    <div class="cinematic-sticky-container">
+        <div class="cinematic-sticky">
+            <img src="images/North-Storybook-44.jpg" alt="Adventures">
+            <div class="cinematic-overlay"></div>
+            <div class="cinematic-text"><h2>Adventures on the horizon</h2></div>
+        </div>
+    </div>
+    <div class="cinematic-sticky-container">
+        <div class="cinematic-sticky">
+            <img src="images/North-Storybook-50.jpg" alt="Whanau">
+            <div class="cinematic-overlay"></div>
+            <div class="cinematic-text"><h2>And our Whānau has our back</h2></div>
+        </div>
+    </div>
+    <section class="diagonal-section">
+        <div class="diagonal-grid">
+            <div class="diagonal-item"><img src="images/North-Storybook-49.jpg" alt=""></div>
+            <div class="diagonal-item"><img src="images/North-Storybook-51.jpg" alt=""></div>
+            <div class="diagonal-item"><img src="images/North-Storybook-59.jpg" alt=""></div>
+            <div class="diagonal-item"><img src="images/North-Storybook-60.jpg" alt=""></div>
+            <div class="diagonal-item"><img src="images/North-Storybook-61.jpg" alt=""></div>
+            <div class="diagonal-item"><img src="images/North-Storybook-63.jpg" alt=""></div>
+            <div class="diagonal-item"><img src="images/North-Storybook-64.jpg" alt=""></div>
+            <div class="diagonal-item"><img src="images/North-Storybook-72.jpg" alt=""></div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: SOARING HEIGHTS -->
+    <section class="soaring-section">
+        <div class="soaring-text"><h2>Soaring to<br>new heights</h2></div>
+        <div class="soaring-image">
+            <img src="images/heights-background.jpg" alt="Background" class="background">
+            <img src="images/heights-groom.png" alt="Soaring" class="floating-element">
+        </div>
+    </section>
+
+    <!-- SECTION 9: OVERLAPPING GALLERY -->
+    <section class="overlap-section">
+        <div class="overlap-grid">
+            <div class="overlap-item"><img src="images/North-Storybook-52.jpg" alt=""></div>
+            <div class="overlap-item"><img src="images/North-Storybook-53.jpg" alt=""></div>
+            <div class="overlap-item"><img src="images/North-Storybook-54.jpg" alt=""></div>
+            <div class="overlap-item"><img src="images/North-Storybook-57.jpg" alt=""></div>
+            <div class="overlap-item"><img src="images/North-Storybook-65.jpg" alt=""></div>
+            <div class="overlap-item"><img src="images/North-Storybook-66.jpg" alt=""></div>
+            <div class="overlap-item"><img src="images/North-Storybook-67.jpg" alt=""></div>
+            <div class="overlap-item"><img src="images/North-Storybook-68.jpg" alt=""></div>
+            <div class="overlap-item"><img src="images/North-Storybook-69.jpg" alt=""></div>
+            <div class="overlap-item"><img src="images/North-Storybook-71.jpg" alt=""></div>
+        </div>
+    </section>
+
+    <!-- SECTION 10: DIAGONAL MASK -->
+    <section class="diagonal-mask-section">
+        <div class="diagonal-mask-sticky">
+            <div class="diagonal-panel"><img src="images/North-Storybook-58.jpg" alt=""></div>
+            <div class="diagonal-panel"><img src="images/North-Storybook-62.jpg" alt=""></div>
+        </div>
+    </section>
+    <div class="cinematic-sticky-container">
+        <div class="cinematic-sticky">
+            <img src="images/North-Storybook-70.jpg" alt="Bridal Party">
+            <div class="cinematic-overlay"></div>
+        </div>
+    </div>
+
+    <!-- SECTION 11: RECEPTION POLAROIDS -->
+    <section class="polaroid-section">
+        <div class="polaroid-container">
+            <div class="polaroid" style="--rotation: 7deg; width: 190px; top: 5%; left: 5%;"><img src="images/North-Storybook-73.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -14deg; width: 170px; top: 3%; left: 28%;"><img src="images/North-Storybook-74.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 4deg; width: 180px; top: 8%; right: 35%;"><img src="images/North-Storybook-75.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -9deg; width: 200px; top: 5%; right: 8%;"><img src="images/North-Storybook-76.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 12deg; width: 175px; top: 45%; left: 8%;"><img src="images/North-Storybook-77.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -6deg; width: 185px; top: 50%; left: 32%;"><img src="images/North-Storybook-80.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 16deg; width: 165px; top: 48%; right: 28%;"><img src="images/North-Storybook-91.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -11deg; width: 195px; top: 52%; right: 5%;"><img src="images/North-Storybook-93.jpg" alt=""></div>
+        </div>
+    </section>
+
+    <!-- SECTION 12: EPIC ARCHERY -->
+    <section class="epic-gallery-section">
+        <div class="epic-grid">
+            <div class="epic-item"><img src="images/North-Storybook-81.jpg" alt=""></div>
+            <div class="epic-item"><img src="images/North-Storybook-82.jpg" alt=""></div>
+            <div class="epic-item"><img src="images/North-Storybook-83.jpg" alt=""></div>
+            <div class="epic-item"><img src="images/North-Storybook-84.jpg" alt=""></div>
+            <div class="epic-item"><img src="images/North-Storybook-85.jpg" alt=""></div>
+            <div class="epic-item"><img src="images/North-Storybook-86.jpg" alt=""></div>
+            <div class="epic-item"><img src="images/North-Storybook-87.jpg" alt=""></div>
+            <div class="epic-item"><img src="images/North-Storybook-88.jpg" alt=""></div>
+            <div class="epic-item"><img src="images/North-Storybook-89.jpg" alt=""></div>
+            <div class="epic-item"><img src="images/North-Storybook-90.jpg" alt=""></div>
+            <div class="epic-item"><img src="images/North-Storybook-92.jpg" alt=""></div>
+        </div>
+    </section>
+    <div class="epic-cinematic">
+        <img src="images/North-Storybook-96.jpg" alt="Archery Epic" class="main">
+        <div class="joke-stamp"><img src="images/North-Storybook-97.jpg" alt="Gotcha!"></div>
+    </div>
+
+    <!-- SECTION 13: RECEPTION MASONRY -->
+    <section class="masonry-section">
+        <div class="masonry-grid">
+            <div class="masonry-item tall"><img src="images/North-Storybook-94.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-95.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-98.jpg" alt=""></div>
+            <div class="masonry-item tall"><img src="images/North-Storybook-99.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-100.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-101.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-102.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-103.jpg" alt=""></div>
+            <div class="masonry-item tall"><img src="images/North-Storybook-104.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-105.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-106.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-107.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-108.jpg" alt=""></div>
+            <div class="masonry-item tall"><img src="images/North-Storybook-109.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-110.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-111.jpg" alt=""></div>
+            <div class="masonry-item"><img src="images/North-Storybook-112.jpg" alt=""></div>
+        </div>
+    </section>
+
+    <!-- SECTION 14: HAKA CIRCLES -->
+    <section class="circle-section">
+        <div class="circle-grid">
+            <div class="circle-item"><img src="images/North-Storybook-113.jpg" alt=""></div>
+            <div class="circle-item"><img src="images/North-Storybook-114.jpg" alt=""></div>
+            <div class="circle-item"><img src="images/North-Storybook-115.jpg" alt=""></div>
+            <div class="circle-item"><img src="images/North-Storybook-116.jpg" alt=""></div>
+        </div>
+    </section>
+
+    <!-- SECTION 15: FILM STRIPS -->
+    <section class="filmstrip-section">
+        <div class="filmstrip">
+            <div class="filmstrip-track scroll-left">
+                <div class="filmstrip-frame"><img src="images/North-Storybook-117.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-118.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-119.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-120.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-121.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-122.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-123.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-124.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-117.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-118.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-119.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-120.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-121.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-122.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-123.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-124.jpg" alt=""></div>
+            </div>
+        </div>
+        <div class="filmstrip">
+            <div class="filmstrip-track scroll-right">
+                <div class="filmstrip-frame"><img src="images/North-Storybook-125.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-126.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-127.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-128.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-129.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-130.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-131.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-125.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-126.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-127.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-128.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-129.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-130.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-131.jpg" alt=""></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 16: FINAL -->
+    <section class="final-section">
+        <img src="images/North-Storybook-78.jpg" alt="North Bound">
+        <div class="overlay"></div>
+        <div class="final-text"><h2>North Bound.</h2></div>
+        <div class="footer-credit">
+            <a href="https://storybook.nz" target="_blank">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 15C20 15 25 20 50 20C75 20 80 15 80 15V80C80 80 75 75 50 75C25 75 20 80 20 80V15Z" stroke="currentColor" stroke-width="3" fill="none"/>
+                    <path d="M50 20V75" stroke="currentColor" stroke-width="2"/>
+                    <path d="M50 40C50 35 45 30 40 30C35 30 30 35 30 40C30 50 50 58 50 58C50 58 70 50 70 40C70 35 65 30 60 30C55 30 50 35 50 40Z" fill="currentColor" opacity="0.6"/>
+                </svg>
+                <span>Crafted by Storybook Weddings</span>
+            </a>
+        </div>
+    </section>
+
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => { document.querySelector('.loader').classList.add('hidden'); }, 2000);
+        });
+
+        const nameRevealContainer = document.querySelector('.name-reveal-container');
+        const sebPanel = document.getElementById('seb-panel');
+        const saritaPanel = document.getElementById('sarita-panel');
+        const finalReveal = document.getElementById('final-reveal');
+        const combinedNames = document.getElementById('combined-names');
+        const northText = document.getElementById('north-text');
+        const crown = document.getElementById('crown');
+
+        function updateNameReveal() {
+            const rect = nameRevealContainer.getBoundingClientRect();
+            const scrollProgress = -rect.top / (rect.height - window.innerHeight);
+            const progress = Math.max(0, Math.min(1, scrollProgress));
+
+            if (progress < 0.3) {
+                sebPanel.classList.add('active');
+                saritaPanel.classList.remove('active');
+                finalReveal.classList.remove('active');
+            } else if (progress < 0.55) {
+                sebPanel.classList.remove('active');
+                saritaPanel.classList.add('active');
+                finalReveal.classList.remove('active');
+            } else {
+                sebPanel.classList.remove('active');
+                saritaPanel.classList.remove('active');
+                finalReveal.classList.add('active');
+                if (progress > 0.65) combinedNames.classList.add('visible');
+                if (progress > 0.75) northText.classList.add('visible');
+                if (progress > 0.8) crown.classList.add('visible');
+            }
+        }
+
+        function revealOnScroll() {
+            const elements = document.querySelectorAll('.polaroid, .masonry-item, .diagonal-item, .overlap-item, .circle-item, .epic-item, .solo-spotlight-image');
+            elements.forEach((el, index) => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.9) {
+                    setTimeout(() => { el.classList.add('visible'); }, (index % 8) * 80);
+                }
+            });
+        }
+
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateNameReveal();
+                    revealOnScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        updateNameReveal();
+        revealOnScroll();
+    </script>
+</body>
+</html>
