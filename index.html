@@ -54,27 +54,40 @@
         }
 
         /* SECTION 1: NAME REVEAL */
-        .name-reveal-container { height: 400vh; position: relative; }
+        .name-reveal-container { height: 350vh; position: relative; }
         .name-reveal-sticky {
             position: sticky; top: 0; height: 100vh; overflow: hidden;
+            background: var(--charcoal);
         }
-        .solo-panel {
+        .duo-panel {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.6s ease;
+            gap: 4rem; padding: 2rem;
+            opacity: 0; transition: opacity 0.8s ease;
         }
-        .solo-panel.active { opacity: 1; }
-        .solo-panel img { width: 100%; height: 100%; object-fit: cover; }
-        .solo-name {
-            position: absolute;
-            font-family: var(--font-script);
-            font-size: clamp(3rem, 10vw, 8rem);
-            color: var(--cream);
-            text-shadow: 0 4px 30px rgba(0,0,0,0.5);
-            z-index: 10;
+        .duo-panel.active { opacity: 1; }
+        .portrait-card {
+            position: relative; height: 75vh; width: auto;
+            opacity: 0; transform: translateY(60px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
-        .solo-name.seb { bottom: 15%; left: 10%; }
-        .solo-name.sarita { bottom: 15%; right: 10%; }
+        .portrait-card.visible { opacity: 1; transform: translateY(0); }
+        .portrait-card.seb { transition-delay: 0.2s; }
+        .portrait-card.sarita { transition-delay: 0.5s; }
+        .portrait-card img {
+            height: 100%; width: auto; max-width: 40vw;
+            object-fit: contain; border-radius: 8px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+        }
+        .portrait-name {
+            position: absolute; bottom: -3rem; left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-sans); font-weight: 300;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: var(--cream); white-space: nowrap;
+            letter-spacing: 0.1em;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
         .final-reveal {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             opacity: 0; transition: opacity 0.6s ease;
@@ -87,7 +100,8 @@
             text-align: center; z-index: 10;
         }
         .final-names .combined {
-            font-family: var(--font-script);
+            font-family: var(--font-sans);
+            font-weight: 200;
             font-size: clamp(3rem, 12vw, 10rem);
             color: var(--cream);
             text-shadow: 0 4px 40px rgba(0,0,0,0.6);
@@ -96,6 +110,10 @@
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
         .final-names .combined.visible { opacity: 1; transform: translateY(0); }
+        .north-wrapper {
+            position: relative; display: inline-block;
+            margin-top: 1rem;
+        }
         .final-names .north {
             font-family: var(--font-sans);
             font-weight: 200;
@@ -103,20 +121,19 @@
             letter-spacing: 0.5em;
             text-transform: uppercase;
             color: var(--gold);
-            margin-top: 1rem;
             opacity: 0; transform: translateY(20px);
             transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
         }
         .final-names .north.visible { opacity: 1; transform: translateY(0); }
         .crown-image {
-            position: absolute; bottom: 8%; right: 8%;
-            width: clamp(80px, 15vw, 180px); height: auto;
+            position: absolute; bottom: -30px; right: -50px;
+            width: clamp(40px, 6vw, 80px); height: auto;
             z-index: 20; opacity: 0;
-            transform: rotate(-15deg);
-            transition: opacity 0.6s ease 0.5s, transform 0.6s ease 0.5s;
-            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.4));
+            transform: rotate(15deg) translateY(-10px);
+            transition: opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s;
+            filter: drop-shadow(0 4px 15px rgba(0,0,0,0.4));
         }
-        .crown-image.visible { opacity: 1; transform: rotate(-10deg); }
+        .crown-image.visible { opacity: 1; transform: rotate(12deg) translateY(0); }
         .cinematic-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, rgba(42,36,32,0.2) 0%, transparent 30%, transparent 70%, rgba(42,36,32,0.4) 100%);
@@ -125,33 +142,39 @@
 
         /* POLAROID SCATTER */
         .polaroid-section {
-            min-height: 100vh; padding: 4rem 2rem;
+            min-height: 120vh; padding: 4rem 2rem;
             position: relative; background: var(--cream); overflow: hidden;
         }
         .polaroid-container {
-            max-width: 1600px; margin: 0 auto;
-            min-height: 90vh; position: relative;
+            max-width: 1800px; margin: 0 auto;
+            min-height: 110vh; position: relative;
         }
         .polaroid {
             position: absolute; background: white;
-            padding: 0.8rem 0.8rem 2.5rem 0.8rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+            padding: 1.2rem 1.2rem 3.5rem 1.2rem;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+            cursor: grab;
+            transition: box-shadow 0.3s ease;
             opacity: 0;
             transform: translateY(100px) rotate(var(--rotation, 0deg));
+            user-select: none;
         }
         .polaroid.visible {
             opacity: 1;
             transform: translateY(0) rotate(var(--rotation, 0deg));
         }
-        .polaroid:hover {
-            transform: translateY(-10px) rotate(0deg) scale(1.08) !important;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+        .polaroid.dragging {
+            cursor: grabbing;
+            box-shadow: 0 35px 80px rgba(0,0,0,0.4);
+            z-index: 1000 !important;
+            transition: box-shadow 0.15s ease;
+        }
+        .polaroid:hover:not(.dragging) {
+            box-shadow: 0 30px 70px rgba(0,0,0,0.35);
             z-index: 100 !important;
         }
-        .polaroid img { width: 100%; height: auto; display: block; }
-        .polaroid.large { padding: 1rem 1rem 3rem 1rem; }
+        .polaroid img { width: 100%; height: auto; display: block; pointer-events: none; }
+        .polaroid.large { padding: 1.5rem 1.5rem 4rem 1.5rem; }
 
         /* HORIZONTAL SCROLL */
         .horizontal-section { padding: 4rem 0; background: var(--charcoal); overflow: hidden; }
@@ -198,16 +221,41 @@
         }
         .solo-spotlight-image.visible { opacity: 1; transform: scale(1); }
 
-        /* CINEMATIC STICKY */
-        .cinematic-sticky-container { height: 150vh; position: relative; }
-        .cinematic-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-        .cinematic-sticky img { width: 100%; height: 100%; object-fit: cover; }
-        .cinematic-text {
-            position: absolute; bottom: 10%; left: 50%;
-            transform: translateX(-50%);
-            text-align: center; z-index: 5;
+        /* CINEMATIC PARALLAX */
+        .cinematic-parallax {
+            height: 100vh; position: relative; overflow: hidden;
         }
-        .cinematic-text h2 {
+        .cinematic-parallax img {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%; min-height: 120%;
+            width: auto; height: auto;
+            object-fit: cover;
+        }
+        .parallax-text {
+            position: absolute; z-index: 5;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .parallax-text.bottom {
+            bottom: 10%; left: 50%;
+            transform: translateX(-50%) translateY(30px);
+        }
+        .parallax-text.center {
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) translateY(30px);
+        }
+        .parallax-text.visible {
+            opacity: 1;
+        }
+        .parallax-text.visible.bottom {
+            transform: translateX(-50%) translateY(0);
+        }
+        .parallax-text.visible.center {
+            transform: translate(-50%, -50%) translateY(0);
+        }
+        .parallax-text h2 {
             font-family: var(--font-script);
             font-size: clamp(2.5rem, 8vw, 6rem);
             color: var(--cream);
@@ -220,7 +268,7 @@
             max-width: 1400px; margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1rem; grid-auto-rows: 180px;
+            gap: 1rem; grid-auto-rows: 200px;
         }
         .masonry-item {
             position: relative; overflow: hidden; border-radius: 6px;
@@ -230,6 +278,42 @@
         .masonry-item.visible { opacity: 1; transform: translateY(0); }
         .masonry-item.tall { grid-row: span 2; }
         .masonry-item.wide { grid-column: span 2; }
+
+        /* Reception Grid - more creative layout */
+        .reception-section { padding: 4rem 2rem; background: var(--deep-brown); }
+        .reception-grid {
+            max-width: 1600px; margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: 120px;
+            gap: 0.8rem;
+        }
+        .reception-item {
+            position: relative; overflow: hidden; border-radius: 8px;
+            opacity: 0; transform: scale(0.9) rotate(-2deg);
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .reception-item.visible { opacity: 1; transform: scale(1) rotate(0deg); }
+        .reception-item:hover { transform: scale(1.03) rotate(1deg); z-index: 5; }
+        .reception-item img { width: 100%; height: 100%; object-fit: cover; }
+        .reception-item:nth-child(1) { grid-column: 1 / 4; grid-row: 1 / 4; }
+        .reception-item:nth-child(2) { grid-column: 4 / 6; grid-row: 1 / 3; }
+        .reception-item:nth-child(3) { grid-column: 6 / 9; grid-row: 1 / 3; }
+        .reception-item:nth-child(4) { grid-column: 9 / 13; grid-row: 1 / 4; }
+        .reception-item:nth-child(5) { grid-column: 4 / 7; grid-row: 3 / 6; }
+        .reception-item:nth-child(6) { grid-column: 7 / 9; grid-row: 3 / 5; }
+        .reception-item:nth-child(7) { grid-column: 1 / 4; grid-row: 4 / 7; }
+        .reception-item:nth-child(8) { grid-column: 9 / 11; grid-row: 4 / 6; }
+        .reception-item:nth-child(9) { grid-column: 11 / 13; grid-row: 4 / 7; }
+        .reception-item:nth-child(10) { grid-column: 4 / 6; grid-row: 6 / 8; }
+        .reception-item:nth-child(11) { grid-column: 6 / 9; grid-row: 5 / 8; }
+        .reception-item:nth-child(12) { grid-column: 9 / 11; grid-row: 6 / 8; }
+        .reception-item:nth-child(13) { grid-column: 1 / 4; grid-row: 7 / 9; }
+        .reception-item:nth-child(14) { grid-column: 4 / 7; grid-row: 8 / 10; }
+        .reception-item:nth-child(15) { grid-column: 7 / 10; grid-row: 8 / 10; }
+        .reception-item:nth-child(16) { grid-column: 10 / 13; grid-row: 7 / 10; }
+        .reception-item:nth-child(17) { grid-column: 1 / 4; grid-row: 9 / 11; }
         .masonry-item.large { grid-column: span 2; grid-row: span 2; }
         .masonry-item img {
             width: 100%; height: 100%; object-fit: cover;
@@ -243,25 +327,25 @@
             background: var(--charcoal);
             display: flex; align-items: center; justify-content: center;
         }
-        .card-stack { position: relative; width: 320px; height: 450px; perspective: 1000px; }
+        .card-stack { position: relative; width: 500px; height: 700px; perspective: 1500px; }
         .stack-card {
             position: absolute; width: 100%; height: 100%;
-            background: white; border-radius: 12px; overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            background: white; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
             cursor: pointer;
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .stack-card img { width: 100%; height: 100%; object-fit: cover; }
         .stack-card:nth-child(1) { transform: translateZ(0) rotate(-4deg); z-index: 5; }
-        .stack-card:nth-child(2) { transform: translateZ(-15px) translateX(25px) rotate(3deg); z-index: 4; }
-        .stack-card:nth-child(3) { transform: translateZ(-30px) translateX(50px) rotate(-2deg); z-index: 3; }
-        .stack-card:nth-child(4) { transform: translateZ(-45px) translateX(75px) rotate(5deg); z-index: 2; }
-        .stack-card:nth-child(5) { transform: translateZ(-60px) translateX(100px) rotate(-3deg); z-index: 1; }
-        .card-stack:hover .stack-card:nth-child(1) { transform: translateX(-180px) rotate(-15deg); }
-        .card-stack:hover .stack-card:nth-child(2) { transform: translateX(-90px) rotate(-8deg); }
+        .stack-card:nth-child(2) { transform: translateZ(-20px) translateX(80px) rotate(3deg); z-index: 4; }
+        .stack-card:nth-child(3) { transform: translateZ(-40px) translateX(160px) rotate(-2deg); z-index: 3; }
+        .stack-card:nth-child(4) { transform: translateZ(-60px) translateX(240px) rotate(5deg); z-index: 2; }
+        .stack-card:nth-child(5) { transform: translateZ(-80px) translateX(320px) rotate(-3deg); z-index: 1; }
+        .card-stack:hover .stack-card:nth-child(1) { transform: translateX(-400px) rotate(-18deg); }
+        .card-stack:hover .stack-card:nth-child(2) { transform: translateX(-200px) rotate(-10deg); }
         .card-stack:hover .stack-card:nth-child(3) { transform: translateX(0) rotate(0deg); }
-        .card-stack:hover .stack-card:nth-child(4) { transform: translateX(90px) rotate(8deg); }
-        .card-stack:hover .stack-card:nth-child(5) { transform: translateX(180px) rotate(15deg); }
+        .card-stack:hover .stack-card:nth-child(4) { transform: translateX(200px) rotate(10deg); }
+        .card-stack:hover .stack-card:nth-child(5) { transform: translateX(400px) rotate(18deg); }
 
         /* DIAGONAL GALLERY */
         .diagonal-section { padding: 4rem 1rem; background: var(--sage); }
@@ -290,61 +374,75 @@
             display: grid; grid-template-columns: 1fr 1fr;
             background: var(--deep-brown); overflow: hidden;
         }
-        .soaring-text { display: flex; align-items: center; justify-content: center; padding: 4rem; }
+        .soaring-text {
+            display: flex; align-items: center; justify-content: center;
+            padding: 4rem;
+        }
         .soaring-text h2 {
             font-family: var(--font-script);
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            color: var(--cream); text-align: center; line-height: 1.2;
+            font-size: clamp(4rem, 12vw, 12rem);
+            color: var(--cream); text-align: center; line-height: 1.1;
+        }
+        .soaring-text h2 .highlight {
+            color: var(--gold);
+            display: block;
         }
         .soaring-image { position: relative; overflow: hidden; }
         .soaring-image .background { width: 100%; height: 100%; object-fit: cover; }
         .soaring-image .floating-element {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 80%; height: auto;
+            width: 90%; height: auto;
             animation: floatUpDown 4s ease-in-out infinite;
-            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 15px 40px rgba(0,0,0,0.4));
         }
         @keyframes floatUpDown {
             0%, 100% { transform: translate(-50%, -50%) translateY(0); }
-            50% { transform: translate(-50%, -50%) translateY(-30px); }
+            50% { transform: translate(-50%, -50%) translateY(-40px); }
         }
 
         /* OVERLAPPING GALLERY */
         .overlap-section { padding: 6rem 2rem; background: var(--cream); }
         .overlap-grid {
-            max-width: 1400px; margin: 0 auto;
+            max-width: 1600px; margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: repeat(6, 100px);
+            grid-template-rows: repeat(8, 100px);
             gap: 1rem;
         }
         .overlap-item {
             overflow: hidden; border-radius: 8px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             opacity: 0; transform: scale(0.9);
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
         .overlap-item.visible { opacity: 1; transform: scale(1); }
-        .overlap-item:hover { z-index: 10; transform: scale(1.02); }
+        .overlap-item:hover { z-index: 10; transform: scale(1.03); }
         .overlap-item img { width: 100%; height: 100%; object-fit: cover; }
-        .overlap-item:nth-child(1) { grid-column: 1 / 5; grid-row: 1 / 3; }
-        .overlap-item:nth-child(2) { grid-column: 4 / 8; grid-row: 2 / 5; z-index: 2; }
-        .overlap-item:nth-child(3) { grid-column: 7 / 10; grid-row: 1 / 3; }
-        .overlap-item:nth-child(4) { grid-column: 9 / 13; grid-row: 2 / 4; }
-        .overlap-item:nth-child(5) { grid-column: 1 / 4; grid-row: 3 / 5; }
-        .overlap-item:nth-child(6) { grid-column: 3 / 6; grid-row: 4 / 7; z-index: 2; }
-        .overlap-item:nth-child(7) { grid-column: 6 / 9; grid-row: 4 / 6; }
-        .overlap-item:nth-child(8) { grid-column: 8 / 11; grid-row: 3 / 6; z-index: 2; }
-        .overlap-item:nth-child(9) { grid-column: 10 / 13; grid-row: 4 / 7; }
-        .overlap-item:nth-child(10) { grid-column: 5 / 8; grid-row: 5 / 7; z-index: 3; }
+        .overlap-item:nth-child(1) { grid-column: 1 / 6; grid-row: 1 / 4; }
+        .overlap-item:nth-child(2) { grid-column: 4 / 9; grid-row: 2 / 6; z-index: 2; }
+        .overlap-item:nth-child(3) { grid-column: 8 / 13; grid-row: 1 / 4; }
+        .overlap-item:nth-child(4) { grid-column: 1 / 5; grid-row: 4 / 7; }
+        .overlap-item:nth-child(5) { grid-column: 4 / 8; grid-row: 5 / 9; z-index: 2; }
+        .overlap-item:nth-child(6) { grid-column: 7 / 11; grid-row: 4 / 7; z-index: 3; }
+        .overlap-item:nth-child(7) { grid-column: 10 / 13; grid-row: 3 / 6; }
+        .overlap-item:nth-child(8) { grid-column: 1 / 4; grid-row: 7 / 9; }
+        .overlap-item:nth-child(9) { grid-column: 8 / 13; grid-row: 6 / 9; z-index: 2; }
+        .overlap-item:nth-child(10) { grid-column: 3 / 7; grid-row: 7 / 9; z-index: 3; }
 
-        /* DIAGONAL MASK */
-        .diagonal-mask-section { position: relative; height: 200vh; }
+        /* DIAGONAL MASK - with scroll parallax */
+        .diagonal-mask-section { position: relative; height: 150vh; }
         .diagonal-mask-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-        .diagonal-panel { position: absolute; top: 0; width: 100%; height: 100%; }
-        .diagonal-panel img { width: 100%; height: 100%; object-fit: cover; }
-        .diagonal-panel:first-child { clip-path: polygon(0 0, 60% 0, 40% 100%, 0 100%); z-index: 2; }
+        .diagonal-panel { position: absolute; top: 0; width: 100%; height: 120%; }
+        .diagonal-panel img { 
+            width: 100%; height: 100%; object-fit: cover;
+            transform: translateY(0);
+            transition: transform 0.1s ease-out;
+        }
+        .diagonal-panel:first-child { 
+            clip-path: polygon(0 0, 55% 0, 45% 100%, 0 100%); 
+            z-index: 2; 
+        }
         .diagonal-panel:last-child { z-index: 1; }
 
         /* EPIC GALLERY */
@@ -360,10 +458,10 @@
             pointer-events: none;
         }
         .epic-grid {
-            max-width: 1600px; margin: 0 auto;
+            max-width: 1800px; margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(4, 150px);
+            grid-template-rows: repeat(4, 200px);
             gap: 1rem;
         }
         .epic-item {
@@ -415,12 +513,12 @@
         /* CIRCLE GALLERY */
         .circle-section { padding: 6rem 2rem; background: var(--deep-brown); }
         .circle-grid {
-            max-width: 1200px; margin: 0 auto;
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem;
+            max-width: 1600px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 3rem;
         }
         .circle-item {
             aspect-ratio: 1; border-radius: 50%; overflow: hidden;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             opacity: 0; transform: scale(0) rotate(180deg);
             transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -430,23 +528,31 @@
 
         /* FILM STRIPS */
         .filmstrip-section { padding: 4rem 0; background: #0a0908; overflow: hidden; }
-        .filmstrip { position: relative; padding: 25px 0; margin-bottom: 2rem; }
+        .filmstrip { position: relative; padding: 30px 0; margin-bottom: 2rem; }
         .filmstrip::before, .filmstrip::after {
-            content: ''; position: absolute; left: 0; right: 0; height: 20px; background: #1a1a1a;
+            content: ''; position: absolute; left: 0; right: 0; height: 25px; background: #1a1a1a;
         }
         .filmstrip::before { top: 0; }
         .filmstrip::after { bottom: 0; }
-        .filmstrip-track { display: flex; gap: 8px; padding: 5px 0; }
-        .filmstrip-track.scroll-left { animation: filmScrollLeft 30s linear infinite; }
-        .filmstrip-track.scroll-right { animation: filmScrollRight 35s linear infinite; }
+        .filmstrip-track { display: flex; gap: 12px; padding: 5px 0; }
+        .filmstrip-track.scroll-left { animation: filmScrollLeft 60s linear infinite; }
+        .filmstrip-track.scroll-right { animation: filmScrollRight 70s linear infinite; }
         @keyframes filmScrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes filmScrollRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-        .filmstrip-frame { flex-shrink: 0; width: 180px; height: 270px; background: white; padding: 4px; }
-        .filmstrip-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .filmstrip-frame {
+            flex-shrink: 0; width: 280px; height: auto;
+            background: white; padding: 6px;
+        }
+        .filmstrip-frame img { width: 100%; height: auto; display: block; }
 
         /* FINAL SECTION */
         .final-section { height: 100vh; position: relative; overflow: hidden; }
-        .final-section > img { width: 100%; height: 100%; object-fit: cover; }
+        .final-section > img {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%; height: auto; min-height: 100%;
+            object-fit: cover;
+        }
         .final-section .overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to top, rgba(42,36,32,0.7) 0%, transparent 50%);
@@ -463,13 +569,11 @@
         }
         .footer-credit { position: absolute; bottom: 3%; right: 5%; z-index: 10; }
         .footer-credit a {
-            display: flex; align-items: center; gap: 0.5rem;
             text-decoration: none; color: var(--cream);
             opacity: 0.8; transition: opacity 0.3s ease;
+            font-family: var(--font-sans); font-size: 1rem; letter-spacing: 0.1em;
         }
         .footer-credit a:hover { opacity: 1; }
-        .footer-credit svg { width: 28px; height: 28px; }
-        .footer-credit span { font-family: var(--font-sans); font-size: 0.8rem; letter-spacing: 0.1em; }
 
         /* RESPONSIVE */
         @media (max-width: 1024px) {
@@ -481,19 +585,30 @@
             .overlap-item:nth-child(n) { grid-column: span 1; grid-row: span 1; }
             .diagonal-grid { grid-template-columns: repeat(2, 1fr); }
         }
+        @media (max-width: 1024px) {
+            .duo-panel { gap: 2rem; }
+            .portrait-card img { max-width: 45vw; }
+            .reception-grid { grid-template-columns: repeat(6, 1fr); }
+            .reception-item:nth-child(n) { grid-column: span 2; grid-row: span 2; }
+        }
         @media (max-width: 768px) {
+            .duo-panel { flex-direction: column; gap: 1rem; }
+            .portrait-card { height: 45vh; }
+            .portrait-card img { max-width: 80vw; height: 100%; }
+            .portrait-name { font-size: 1rem; bottom: -2rem; }
             .soaring-section { grid-template-columns: 1fr; height: auto; }
             .soaring-text { padding: 4rem 2rem; }
+            .soaring-text h2 { font-size: clamp(3rem, 10vw, 8rem); }
             .soaring-image { height: 60vh; }
             .masonry-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
             .masonry-item.large, .masonry-item.wide { grid-column: span 1; }
             .masonry-item.tall { grid-row: span 1; }
-            .card-stack { width: 280px; height: 380px; }
-            .card-stack:hover .stack-card:nth-child(1) { transform: translateY(-100px) rotate(-10deg); }
-            .card-stack:hover .stack-card:nth-child(2) { transform: translateY(-50px) rotate(-5deg); }
+            .card-stack { width: 350px; height: 500px; }
+            .card-stack:hover .stack-card:nth-child(1) { transform: translateY(-150px) rotate(-10deg); }
+            .card-stack:hover .stack-card:nth-child(2) { transform: translateY(-75px) rotate(-5deg); }
             .card-stack:hover .stack-card:nth-child(3) { transform: translateY(0) rotate(0deg); }
-            .card-stack:hover .stack-card:nth-child(4) { transform: translateY(50px) rotate(5deg); }
-            .card-stack:hover .stack-card:nth-child(5) { transform: translateY(100px) rotate(10deg); }
+            .card-stack:hover .stack-card:nth-child(4) { transform: translateY(75px) rotate(5deg); }
+            .card-stack:hover .stack-card:nth-child(5) { transform: translateY(150px) rotate(10deg); }
             .circle-grid { grid-template-columns: repeat(2, 1fr); }
             .polaroid {
                 position: relative !important; margin: 0.5rem;
@@ -503,12 +618,19 @@
             .polaroid-container { display: flex; flex-wrap: wrap; justify-content: center; min-height: auto; }
             .horizontal-item { width: 260px; height: 360px; }
             .diagonal-panel:first-child { clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); }
+            .reception-grid { grid-template-columns: repeat(4, 1fr); }
+            .reception-item:nth-child(n) { grid-column: span 2; grid-row: span 2; }
+            .overlap-grid { grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(8, 80px); }
+            .overlap-item:nth-child(n) { grid-column: span 3; grid-row: span 2; }
         }
         @media (max-width: 480px) {
             .masonry-grid { grid-template-columns: 1fr; }
             .epic-grid { grid-template-columns: repeat(2, 1fr); }
             .circle-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
             .polaroid { width: calc(100% - 1rem) !important; }
+            .reception-grid { grid-template-columns: 1fr 1fr; }
+            .reception-item:nth-child(n) { grid-column: span 1; grid-row: span 2; }
+            .card-stack { width: 280px; height: 400px; }
         }
     </style>
 </head>
@@ -518,22 +640,26 @@
     <!-- SECTION 1: NAME REVEAL -->
     <section class="name-reveal-container">
         <div class="name-reveal-sticky">
-            <div class="solo-panel" id="seb-panel">
-                <img src="images/North-Storybook-48.jpg" alt="Seb">
-                <span class="solo-name seb">Seb Gray</span>
-            </div>
-            <div class="solo-panel" id="sarita-panel">
-                <img src="images/North-Storybook-46.jpg" alt="Sarita">
-                <span class="solo-name sarita">Sarita Fawcett</span>
+            <div class="duo-panel" id="duo-panel">
+                <div class="portrait-card seb" id="seb-card">
+                    <img src="images/North-Storybook-48.jpg" alt="Seb">
+                    <span class="portrait-name">Seb Gray</span>
+                </div>
+                <div class="portrait-card sarita" id="sarita-card">
+                    <img src="images/North-Storybook-46.jpg" alt="Sarita">
+                    <span class="portrait-name">Sarita Fawcett</span>
+                </div>
             </div>
             <div class="final-reveal" id="final-reveal">
                 <img src="images/North-Storybook-3.jpg" alt="Seb & Sarita North">
                 <div class="cinematic-overlay"></div>
                 <div class="final-names">
                     <div class="combined" id="combined-names">Seb & Sarita</div>
-                    <div class="north" id="north-text">North</div>
+                    <div class="north-wrapper">
+                        <span class="north" id="north-text">North</span>
+                        <img src="images/Crown.png" alt="Crown" class="crown-image" id="crown">
+                    </div>
                 </div>
-                <img src="images/Crown.png" alt="Crown" class="crown-image" id="crown">
             </div>
         </div>
     </section>
@@ -541,15 +667,15 @@
     <!-- SECTION 2: POLAROID SCATTER -->
     <section class="polaroid-section">
         <div class="polaroid-container">
-            <div class="polaroid" style="--rotation: -12deg; width: 180px; top: 5%; left: 3%;"><img src="images/North-Storybook-4.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: 8deg; width: 160px; top: 8%; left: 22%;"><img src="images/North-Storybook-1.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: -5deg; width: 170px; top: 3%; left: 42%;"><img src="images/North-Storybook-2.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: 15deg; width: 165px; top: 10%; right: 20%;"><img src="images/North-Storybook-5.jpg" alt=""></div>
-            <div class="polaroid large" style="--rotation: -3deg; width: 240px; top: 15%; right: 3%;"><img src="images/North-Storybook-6.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: 10deg; width: 175px; top: 45%; left: 5%;"><img src="images/North-Storybook-7.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: -18deg; width: 155px; top: 50%; left: 28%;"><img src="images/North-Storybook-8.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: 6deg; width: 185px; top: 48%; right: 30%;"><img src="images/North-Storybook-9.jpg" alt=""></div>
-            <div class="polaroid large" style="--rotation: -8deg; width: 260px; top: 55%; right: 5%;"><img src="images/North-Storybook-10.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -12deg; width: 480px; top: 3%; left: 2%;"><img src="images/North-Storybook-4.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 8deg; width: 420px; top: 5%; left: 25%;"><img src="images/North-Storybook-1.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -5deg; width: 450px; top: 2%; right: 15%;"><img src="images/North-Storybook-2.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 15deg; width: 440px; top: 8%; right: 2%;"><img src="images/North-Storybook-5.jpg" alt=""></div>
+            <div class="polaroid large" style="--rotation: -3deg; width: 600px; top: 35%; left: 5%;"><img src="images/North-Storybook-6.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 10deg; width: 470px; top: 40%; left: 35%;"><img src="images/North-Storybook-7.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -18deg; width: 400px; top: 38%; right: 20%;"><img src="images/North-Storybook-8.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 6deg; width: 490px; top: 55%; right: 5%;"><img src="images/North-Storybook-9.jpg" alt=""></div>
+            <div class="polaroid large" style="--rotation: -8deg; width: 650px; top: 65%; left: 20%;"><img src="images/North-Storybook-10.jpg" alt=""></div>
         </div>
     </section>
 
@@ -561,6 +687,7 @@
             <div class="horizontal-item"><img src="images/North-Storybook-12.jpg" alt=""></div>
             <div class="horizontal-item"><img src="images/North-Storybook-14.jpg" alt=""></div>
             <div class="horizontal-item"><img src="images/North-Storybook-13.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-15.jpg" alt=""></div>
             <div class="horizontal-item"><img src="images/North-Storybook-18.jpg" alt=""></div>
             <div class="horizontal-item"><img src="images/North-Storybook-19.jpg" alt=""></div>
             <div class="horizontal-item"><img src="images/North-Storybook-20.jpg" alt=""></div>
@@ -571,6 +698,7 @@
             <div class="horizontal-item"><img src="images/North-Storybook-12.jpg" alt=""></div>
             <div class="horizontal-item"><img src="images/North-Storybook-14.jpg" alt=""></div>
             <div class="horizontal-item"><img src="images/North-Storybook-13.jpg" alt=""></div>
+            <div class="horizontal-item"><img src="images/North-Storybook-15.jpg" alt=""></div>
             <div class="horizontal-item"><img src="images/North-Storybook-18.jpg" alt=""></div>
             <div class="horizontal-item"><img src="images/North-Storybook-19.jpg" alt=""></div>
             <div class="horizontal-item"><img src="images/North-Storybook-20.jpg" alt=""></div>
@@ -579,24 +707,18 @@
         </div>
     </section>
 
-    <!-- SECTION 4: SOLO SPOTLIGHT -->
-    <section class="solo-spotlight">
-        <img src="images/North-Storybook-15.jpg" alt="Hugs" class="solo-spotlight-image">
-    </section>
-
     <!-- SECTION 5: CEREMONY -->
-    <div class="cinematic-sticky-container">
-        <div class="cinematic-sticky">
-            <img src="images/North-Storybook-22.jpg" alt="Ceremony">
-            <div class="cinematic-overlay"></div>
-        </div>
-    </div>
+    <section class="cinematic-parallax">
+        <img src="images/North-Storybook-22.jpg" alt="Ceremony">
+        <div class="cinematic-overlay"></div>
+    </section>
     <section class="masonry-section">
         <div class="masonry-grid">
             <div class="masonry-item tall"><img src="images/North-Storybook-16.jpg" alt=""></div>
             <div class="masonry-item"><img src="images/North-Storybook-17.jpg" alt=""></div>
             <div class="masonry-item"><img src="images/North-Storybook-25.jpg" alt=""></div>
             <div class="masonry-item tall"><img src="images/North-Storybook-26.jpg" alt=""></div>
+            <div class="masonry-item large"><img src="images/North-Storybook-38.jpg" alt=""></div>
             <div class="masonry-item"><img src="images/North-Storybook-27.jpg" alt=""></div>
             <div class="masonry-item"><img src="images/North-Storybook-28.jpg" alt=""></div>
             <div class="masonry-item"><img src="images/North-Storybook-29.jpg" alt=""></div>
@@ -604,9 +726,8 @@
             <div class="masonry-item"><img src="images/North-Storybook-35.jpg" alt=""></div>
             <div class="masonry-item tall"><img src="images/North-Storybook-36.jpg" alt=""></div>
             <div class="masonry-item"><img src="images/North-Storybook-37.jpg" alt=""></div>
-            <div class="masonry-item large"><img src="images/North-Storybook-38.jpg" alt=""></div>
-            <div class="masonry-item large"><img src="images/North-Storybook-41.jpg" alt=""></div>
             <div class="masonry-item"><img src="images/North-Storybook-43.jpg" alt=""></div>
+            <div class="masonry-item large"><img src="images/North-Storybook-41.jpg" alt=""></div>
             <div class="masonry-item"><img src="images/North-Storybook-45.jpg" alt=""></div>
             <div class="masonry-item"><img src="images/North-Storybook-39.jpg" alt=""></div>
             <div class="masonry-item"><img src="images/North-Storybook-40.jpg" alt=""></div>
@@ -614,12 +735,10 @@
     </section>
 
     <!-- SECTION 6: CARD STACK -->
-    <div class="cinematic-sticky-container">
-        <div class="cinematic-sticky">
-            <img src="images/North-Storybook-31.jpg" alt="Ceremony">
-            <div class="cinematic-overlay"></div>
-        </div>
-    </div>
+    <section class="cinematic-parallax">
+        <img src="images/North-Storybook-31.jpg" alt="Ceremony">
+        <div class="cinematic-overlay"></div>
+    </section>
     <section class="card-stack-section">
         <div class="card-stack">
             <div class="stack-card"><img src="images/North-Storybook-30.jpg" alt=""></div>
@@ -631,20 +750,16 @@
     </section>
 
     <!-- SECTION 7: ADVENTURES -->
-    <div class="cinematic-sticky-container">
-        <div class="cinematic-sticky">
-            <img src="images/North-Storybook-44.jpg" alt="Adventures">
-            <div class="cinematic-overlay"></div>
-            <div class="cinematic-text"><h2>Adventures on the horizon</h2></div>
-        </div>
-    </div>
-    <div class="cinematic-sticky-container">
-        <div class="cinematic-sticky">
-            <img src="images/North-Storybook-50.jpg" alt="Whanau">
-            <div class="cinematic-overlay"></div>
-            <div class="cinematic-text"><h2>And our Whānau has our back</h2></div>
-        </div>
-    </div>
+    <section class="cinematic-parallax">
+        <img src="images/North-Storybook-44.jpg" alt="Adventures">
+        <div class="cinematic-overlay"></div>
+        <div class="parallax-text center" id="text-adventures"><h2>Adventures on the horizon</h2></div>
+    </section>
+    <section class="cinematic-parallax">
+        <img src="images/North-Storybook-50.jpg" alt="Whanau">
+        <div class="cinematic-overlay"></div>
+        <div class="parallax-text center" id="text-whanau"><h2>And our Whānau has our back</h2></div>
+    </section>
     <section class="diagonal-section">
         <div class="diagonal-grid">
             <div class="diagonal-item"><img src="images/North-Storybook-49.jpg" alt=""></div>
@@ -660,7 +775,7 @@
 
     <!-- SECTION 8: SOARING HEIGHTS -->
     <section class="soaring-section">
-        <div class="soaring-text"><h2>Soaring to<br>new heights</h2></div>
+        <div class="soaring-text"><h2>Soaring to<span class="highlight">new heights</span></h2></div>
         <div class="soaring-image">
             <img src="images/heights-background.jpg" alt="Background" class="background">
             <img src="images/heights-groom.png" alt="Soaring" class="floating-element">
@@ -690,24 +805,22 @@
             <div class="diagonal-panel"><img src="images/North-Storybook-62.jpg" alt=""></div>
         </div>
     </section>
-    <div class="cinematic-sticky-container">
-        <div class="cinematic-sticky">
-            <img src="images/North-Storybook-70.jpg" alt="Bridal Party">
-            <div class="cinematic-overlay"></div>
-        </div>
-    </div>
+    <section class="cinematic-parallax">
+        <img src="images/North-Storybook-70.jpg" alt="Bridal Party">
+        <div class="cinematic-overlay"></div>
+    </section>
 
     <!-- SECTION 11: RECEPTION POLAROIDS -->
     <section class="polaroid-section">
         <div class="polaroid-container">
-            <div class="polaroid" style="--rotation: 7deg; width: 190px; top: 5%; left: 5%;"><img src="images/North-Storybook-73.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: -14deg; width: 170px; top: 3%; left: 28%;"><img src="images/North-Storybook-74.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: 4deg; width: 180px; top: 8%; right: 35%;"><img src="images/North-Storybook-75.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: -9deg; width: 200px; top: 5%; right: 8%;"><img src="images/North-Storybook-76.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: 12deg; width: 175px; top: 45%; left: 8%;"><img src="images/North-Storybook-77.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: -6deg; width: 185px; top: 50%; left: 32%;"><img src="images/North-Storybook-80.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: 16deg; width: 165px; top: 48%; right: 28%;"><img src="images/North-Storybook-91.jpg" alt=""></div>
-            <div class="polaroid" style="--rotation: -11deg; width: 195px; top: 52%; right: 5%;"><img src="images/North-Storybook-93.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 7deg; width: 500px; top: 3%; left: 3%;"><img src="images/North-Storybook-73.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -14deg; width: 450px; top: 2%; left: 30%;"><img src="images/North-Storybook-74.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 4deg; width: 480px; top: 5%; right: 15%;"><img src="images/North-Storybook-75.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -9deg; width: 520px; top: 8%; right: 2%;"><img src="images/North-Storybook-76.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 12deg; width: 460px; top: 40%; left: 5%;"><img src="images/North-Storybook-77.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -6deg; width: 490px; top: 45%; left: 30%;"><img src="images/North-Storybook-80.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: 16deg; width: 440px; top: 42%; right: 18%;"><img src="images/North-Storybook-91.jpg" alt=""></div>
+            <div class="polaroid" style="--rotation: -11deg; width: 510px; top: 50%; right: 3%;"><img src="images/North-Storybook-93.jpg" alt=""></div>
         </div>
     </section>
 
@@ -732,26 +845,26 @@
         <div class="joke-stamp"><img src="images/North-Storybook-97.jpg" alt="Gotcha!"></div>
     </div>
 
-    <!-- SECTION 13: RECEPTION MASONRY -->
-    <section class="masonry-section">
-        <div class="masonry-grid">
-            <div class="masonry-item tall"><img src="images/North-Storybook-94.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-95.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-98.jpg" alt=""></div>
-            <div class="masonry-item tall"><img src="images/North-Storybook-99.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-100.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-101.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-102.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-103.jpg" alt=""></div>
-            <div class="masonry-item tall"><img src="images/North-Storybook-104.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-105.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-106.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-107.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-108.jpg" alt=""></div>
-            <div class="masonry-item tall"><img src="images/North-Storybook-109.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-110.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-111.jpg" alt=""></div>
-            <div class="masonry-item"><img src="images/North-Storybook-112.jpg" alt=""></div>
+    <!-- SECTION 13: RECEPTION - Creative Layout -->
+    <section class="reception-section">
+        <div class="reception-grid">
+            <div class="reception-item"><img src="images/North-Storybook-94.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-95.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-98.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-99.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-100.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-101.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-102.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-103.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-104.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-105.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-106.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-107.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-108.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-109.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-110.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-111.jpg" alt=""></div>
+            <div class="reception-item"><img src="images/North-Storybook-112.jpg" alt=""></div>
         </div>
     </section>
 
@@ -769,6 +882,14 @@
     <section class="filmstrip-section">
         <div class="filmstrip">
             <div class="filmstrip-track scroll-left">
+                <div class="filmstrip-frame"><img src="images/North-Storybook-117.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-118.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-119.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-120.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-121.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-122.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-123.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-124.jpg" alt=""></div>
                 <div class="filmstrip-frame"><img src="images/North-Storybook-117.jpg" alt=""></div>
                 <div class="filmstrip-frame"><img src="images/North-Storybook-118.jpg" alt=""></div>
                 <div class="filmstrip-frame"><img src="images/North-Storybook-119.jpg" alt=""></div>
@@ -803,6 +924,13 @@
                 <div class="filmstrip-frame"><img src="images/North-Storybook-129.jpg" alt=""></div>
                 <div class="filmstrip-frame"><img src="images/North-Storybook-130.jpg" alt=""></div>
                 <div class="filmstrip-frame"><img src="images/North-Storybook-131.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-125.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-126.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-127.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-128.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-129.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-130.jpg" alt=""></div>
+                <div class="filmstrip-frame"><img src="images/North-Storybook-131.jpg" alt=""></div>
             </div>
         </div>
     </section>
@@ -813,14 +941,7 @@
         <div class="overlay"></div>
         <div class="final-text"><h2>North Bound.</h2></div>
         <div class="footer-credit">
-            <a href="https://storybook.nz" target="_blank">
-                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 15C20 15 25 20 50 20C75 20 80 15 80 15V80C80 80 75 75 50 75C25 75 20 80 20 80V15Z" stroke="currentColor" stroke-width="3" fill="none"/>
-                    <path d="M50 20V75" stroke="currentColor" stroke-width="2"/>
-                    <path d="M50 40C50 35 45 30 40 30C35 30 30 35 30 40C30 50 50 58 50 58C50 58 70 50 70 40C70 35 65 30 60 30C55 30 50 35 50 40Z" fill="currentColor" opacity="0.6"/>
-                </svg>
-                <span>Crafted by Storybook Weddings</span>
-            </a>
+            <a href="https://storybook.nz" target="_blank">Crafted by Storybook Weddings</a>
         </div>
     </section>
 
@@ -829,39 +950,98 @@
             setTimeout(() => { document.querySelector('.loader').classList.add('hidden'); }, 2000);
         });
 
+        // Name reveal elements
         const nameRevealContainer = document.querySelector('.name-reveal-container');
-        const sebPanel = document.getElementById('seb-panel');
-        const saritaPanel = document.getElementById('sarita-panel');
+        const duoPanel = document.getElementById('duo-panel');
+        const sebCard = document.getElementById('seb-card');
+        const saritaCard = document.getElementById('sarita-card');
         const finalReveal = document.getElementById('final-reveal');
         const combinedNames = document.getElementById('combined-names');
         const northText = document.getElementById('north-text');
         const crown = document.getElementById('crown');
 
         function updateNameReveal() {
+            if (!nameRevealContainer) return;
             const rect = nameRevealContainer.getBoundingClientRect();
             const scrollProgress = -rect.top / (rect.height - window.innerHeight);
             const progress = Math.max(0, Math.min(1, scrollProgress));
 
-            if (progress < 0.3) {
-                sebPanel.classList.add('active');
-                saritaPanel.classList.remove('active');
+            if (progress < 0.5) {
+                duoPanel.classList.add('active');
                 finalReveal.classList.remove('active');
-            } else if (progress < 0.55) {
-                sebPanel.classList.remove('active');
-                saritaPanel.classList.add('active');
-                finalReveal.classList.remove('active');
+                if (progress > 0.05) sebCard.classList.add('visible');
+                if (progress > 0.15) saritaCard.classList.add('visible');
             } else {
-                sebPanel.classList.remove('active');
-                saritaPanel.classList.remove('active');
+                duoPanel.classList.remove('active');
                 finalReveal.classList.add('active');
-                if (progress > 0.65) combinedNames.classList.add('visible');
-                if (progress > 0.75) northText.classList.add('visible');
-                if (progress > 0.8) crown.classList.add('visible');
+                if (progress > 0.6) combinedNames.classList.add('visible');
+                if (progress > 0.7) northText.classList.add('visible');
+                if (progress > 0.75) crown.classList.add('visible');
             }
         }
 
+        // Parallax effect for cinematic images
+        function updateParallax() {
+            const parallaxSections = document.querySelectorAll('.cinematic-parallax');
+            parallaxSections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const img = section.querySelector('img');
+                if (img && rect.top < window.innerHeight && rect.bottom > 0) {
+                    const scrollPercent = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+                    const yOffset = (scrollPercent - 0.5) * 100;
+                    img.style.transform = `translate(-50%, calc(-50% + ${yOffset}px))`;
+                }
+            });
+            
+            // Diagonal mask parallax
+            const diagonalSection = document.querySelector('.diagonal-mask-section');
+            if (diagonalSection) {
+                const rect = diagonalSection.getBoundingClientRect();
+                const panels = diagonalSection.querySelectorAll('.diagonal-panel img');
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    const scrollPercent = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+                    panels.forEach((img, index) => {
+                        const direction = index === 0 ? -1 : 1;
+                        const yOffset = (scrollPercent - 0.5) * 60 * direction;
+                        img.style.transform = `translateY(${yOffset}px)`;
+                    });
+                }
+            }
+            
+            // Final section parallax
+            const finalSection = document.querySelector('.final-section');
+            if (finalSection) {
+                const rect = finalSection.getBoundingClientRect();
+                const img = finalSection.querySelector('img');
+                if (img && rect.top < window.innerHeight && rect.bottom > 0) {
+                    const scrollPercent = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+                    const yOffset = (scrollPercent - 0.5) * 80;
+                    img.style.transform = `translate(-50%, calc(-50% + ${yOffset}px))`;
+                }
+            }
+        }
+
+        // Scroll-up text for adventures/whanau
+        function updateScrollText() {
+            const textElements = document.querySelectorAll('.parallax-text');
+            textElements.forEach(el => {
+                const section = el.closest('.cinematic-parallax');
+                if (!section) return;
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    el.classList.add('visible');
+                    const scrollPercent = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+                    const yOffset = (1 - scrollPercent) * 150;
+                    el.style.transform = el.classList.contains('center') 
+                        ? `translate(-50%, calc(-50% + ${yOffset}px))`
+                        : `translateX(-50%) translateY(${yOffset}px)`;
+                }
+            });
+        }
+
+        // Reveal animations
         function revealOnScroll() {
-            const elements = document.querySelectorAll('.polaroid, .masonry-item, .diagonal-item, .overlap-item, .circle-item, .epic-item, .solo-spotlight-image');
+            const elements = document.querySelectorAll('.polaroid, .masonry-item, .diagonal-item, .overlap-item, .circle-item, .epic-item, .reception-item');
             elements.forEach((el, index) => {
                 const rect = el.getBoundingClientRect();
                 if (rect.top < window.innerHeight * 0.9) {
@@ -870,11 +1050,49 @@
             });
         }
 
+        // Draggable polaroids
+        let draggedPolaroid = null;
+        let offsetX, offsetY;
+
+        document.querySelectorAll('.polaroid').forEach(polaroid => {
+            polaroid.addEventListener('mousedown', (e) => {
+                draggedPolaroid = polaroid;
+                draggedPolaroid.classList.add('dragging');
+                const rect = polaroid.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                polaroid.style.transition = 'none';
+            });
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (draggedPolaroid) {
+                const container = draggedPolaroid.closest('.polaroid-container');
+                const containerRect = container.getBoundingClientRect();
+                const x = e.clientX - containerRect.left - offsetX;
+                const y = e.clientY - containerRect.top - offsetY;
+                draggedPolaroid.style.left = x + 'px';
+                draggedPolaroid.style.top = y + 'px';
+                draggedPolaroid.style.right = 'auto';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (draggedPolaroid) {
+                draggedPolaroid.classList.remove('dragging');
+                draggedPolaroid.style.transition = '';
+                draggedPolaroid = null;
+            }
+        });
+
+        // Scroll handler
         let ticking = false;
         window.addEventListener('scroll', () => {
             if (!ticking) {
                 window.requestAnimationFrame(() => {
                     updateNameReveal();
+                    updateParallax();
+                    updateScrollText();
                     revealOnScroll();
                     ticking = false;
                 });
@@ -882,7 +1100,10 @@
             }
         });
 
+        // Initial calls
         updateNameReveal();
+        updateParallax();
+        updateScrollText();
         revealOnScroll();
     </script>
 </body>
