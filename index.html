@@ -414,14 +414,16 @@
             overflow: hidden;
         }
         .card-stack { 
-            position: relative; width: 450px; height: 650px; 
+            position: relative; 
+            width: min(320px, 25vw); 
+            height: min(460px, 36vw); 
             perspective: 2000px;
             transform-style: preserve-3d;
         }
         .stack-card {
             position: absolute; width: 100%; height: 100%;
             left: 50%; top: 0;
-            margin-left: -225px;
+            margin-left: -50%;
             background: white; border-radius: 16px; overflow: hidden;
             box-shadow: 0 25px 80px rgba(0,0,0,0.4);
             cursor: pointer;
@@ -434,12 +436,12 @@
         .stack-card:nth-child(3) { transform: translateZ(-20px) translateX(30px) rotate(-1deg); z-index: 3; }
         .stack-card:nth-child(4) { transform: translateZ(-30px) translateX(45px) rotate(2deg); z-index: 2; }
         .stack-card:nth-child(5) { transform: translateZ(-40px) translateX(60px) rotate(-2deg); z-index: 1; }
-        /* Full width spread on hover */
-        .card-stack:hover .stack-card:nth-child(1) { transform: translateX(calc(-50vw + 250px)) rotate(-12deg); }
-        .card-stack:hover .stack-card:nth-child(2) { transform: translateX(calc(-25vw + 125px)) rotate(-6deg); }
+        /* Full width spread on hover - using calc with vw for responsive spread */
+        .card-stack:hover .stack-card:nth-child(1) { transform: translateX(calc(-40vw + 50%)) rotate(-12deg); }
+        .card-stack:hover .stack-card:nth-child(2) { transform: translateX(calc(-20vw + 25%)) rotate(-6deg); }
         .card-stack:hover .stack-card:nth-child(3) { transform: translateX(0) rotate(0deg); }
-        .card-stack:hover .stack-card:nth-child(4) { transform: translateX(calc(25vw - 125px)) rotate(6deg); }
-        .card-stack:hover .stack-card:nth-child(5) { transform: translateX(calc(50vw - 250px)) rotate(12deg); }
+        .card-stack:hover .stack-card:nth-child(4) { transform: translateX(calc(20vw - 25%)) rotate(6deg); }
+        .card-stack:hover .stack-card:nth-child(5) { transform: translateX(calc(40vw - 50%)) rotate(12deg); }
 
         /* INTERACTIVE GALLERY - Reception-style grid layout */
         .interactive-section { 
@@ -485,25 +487,40 @@
         }
         .soaring-text h2 {
             font-family: var(--font-script);
-            font-size: clamp(4rem, 12vw, 12rem);
+            font-size: clamp(2rem, 6vw, 12rem);
             color: var(--cream); text-align: center; line-height: 1.1;
+            white-space: nowrap;
         }
         .soaring-text h2 .highlight {
             color: var(--gold);
             display: block;
         }
-        .soaring-image { position: relative; overflow: hidden; }
-        .soaring-image .background { width: 100%; height: 100%; object-fit: cover; }
+        .soaring-image { 
+            position: relative; 
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .soaring-image .background { 
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%; 
+            object-fit: contain;
+            object-position: center;
+        }
         .soaring-image .floating-element {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%; height: auto;
+            position: absolute; 
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: contain;
+            object-position: center;
             animation: floatUpDown 4s ease-in-out infinite;
             filter: drop-shadow(0 15px 40px rgba(0,0,0,0.4));
         }
         @keyframes floatUpDown {
-            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
-            50% { transform: translate(-50%, -50%) translateY(-40px); }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-40px); }
         }
 
         /* OVERLAPPING GALLERY - Masonry-style columns like section 5 */
@@ -664,12 +681,14 @@
         .final-text {
             position: absolute; bottom: 15%; left: 50%;
             transform: translateX(-50%); text-align: center; z-index: 5;
+            width: 90%;
         }
         .final-text h2 {
             font-family: var(--font-script);
-            font-size: clamp(4rem, 12vw, 10rem);
+            font-size: clamp(3rem, 10vw, 10rem);
             color: var(--cream);
             text-shadow: 0 4px 40px rgba(0,0,0,0.5);
+            white-space: nowrap;
         }
         .footer-credit { position: absolute; bottom: 3%; right: 5%; z-index: 10; }
         .footer-credit a {
@@ -822,8 +841,15 @@
             /* Soaring section - stacked, compact */
             .soaring-section { grid-template-columns: 1fr; height: auto; }
             .soaring-text { padding: 2rem 1rem; }
-            .soaring-text h2 { font-size: clamp(2rem, 8vw, 4rem); }
-            .soaring-image { height: 40vh; }
+            .soaring-text h2 { font-size: clamp(1.5rem, 6vw, 3rem); white-space: normal; }
+            .soaring-image { height: 50vh; }
+            .soaring-image .background,
+            .soaring-image .floating-element {
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                object-fit: contain;
+            }
             
             /* Overlap gallery - 3 columns */
             .overlap-section { padding: 2rem 0.5rem; }
