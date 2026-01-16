@@ -717,8 +717,27 @@
             .horizontal-section { padding: 2rem 0; }
             .horizontal-item { width: 140px; height: 200px; }
             
-            /* Cinematic parallax - shorter on mobile */
-            .cinematic-parallax { height: 50vh; }
+            /* Cinematic parallax - DISABLE parallax on mobile, just normal scroll */
+            .cinematic-parallax { 
+                height: auto; 
+                clip-path: none;
+                -webkit-clip-path: none;
+            }
+            .cinematic-parallax img {
+                position: relative !important;
+                height: auto !important;
+                width: 100%;
+            }
+            .parallax-text { position: relative; padding: 2rem; }
+            .parallax-text.center, .parallax-text.bottom {
+                position: relative;
+                top: auto; left: auto; bottom: auto;
+                transform: none !important;
+                padding: 1rem;
+            }
+            .parallax-text.visible.center, .parallax-text.visible.bottom {
+                transform: none !important;
+            }
             .parallax-text h2 { font-size: clamp(1.5rem, 6vw, 3rem); }
             
             /* Masonry - 3 columns, compact */
@@ -726,15 +745,32 @@
             .masonry-grid { column-count: 3; column-gap: 0.5rem; }
             .masonry-item { margin-bottom: 0.5rem; border-radius: 4px; }
             
-            /* Card stack - smaller */
-            .card-stack-section { min-height: 60vh; padding: 3rem 1rem; }
-            .card-stack { width: 200px; height: 280px; }
-            .stack-card { border-radius: 8px; }
-            .card-stack:hover .stack-card:nth-child(1) { transform: translateX(-60px) rotate(-8deg); }
-            .card-stack:hover .stack-card:nth-child(2) { transform: translateX(-30px) rotate(-4deg); }
-            .card-stack:hover .stack-card:nth-child(3) { transform: translateX(0) rotate(0deg); }
-            .card-stack:hover .stack-card:nth-child(4) { transform: translateX(30px) rotate(4deg); }
-            .card-stack:hover .stack-card:nth-child(5) { transform: translateX(60px) rotate(8deg); }
+            /* Card stack - convert to overlap gallery on mobile */
+            .card-stack-section { 
+                min-height: auto; 
+                padding: 2rem 0.5rem; 
+                display: block;
+            }
+            .card-stack { 
+                width: 100%; 
+                height: auto;
+                max-width: 100%;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+                perspective: none;
+            }
+            .stack-card { 
+                position: relative !important;
+                width: 100% !important;
+                height: auto !important;
+                left: auto !important;
+                margin-left: 0 !important;
+                transform: none !important;
+                border-radius: 8px;
+            }
+            .stack-card img { height: auto; }
+            .card-stack:hover .stack-card:nth-child(n) { transform: none !important; }
             
             /* Interactive gallery - compact grid */
             .interactive-section { padding: 2rem 0.5rem; }
@@ -776,7 +812,8 @@
             .epic-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
             .epic-item:nth-child(5) { grid-column: span 2; grid-row: span 2; }
             
-            .epic-cinematic { height: 50vh; }
+            .epic-cinematic { height: auto; }
+            .epic-cinematic img.main { clip-path: none; }
             .joke-stamp { width: 80px !important; height: 80px !important; border-width: 4px; }
             
             /* Reception grid - compact */
@@ -802,10 +839,31 @@
             .filmstrip-frame { padding: 4px; }
             .filmstrip-frame img { max-height: 120px; }
             
-            /* Final section - shorter */
-            .final-section { height: 60vh; }
+            /* Final section - disable parallax, normal scroll */
+            .final-section { 
+                height: auto; 
+                clip-path: none;
+                -webkit-clip-path: none;
+            }
+            .final-section > img {
+                position: relative !important;
+                height: auto !important;
+                width: 100%;
+            }
+            .final-text { 
+                position: relative; 
+                bottom: auto; left: auto;
+                transform: none;
+                padding: 2rem;
+                text-align: center;
+            }
             .final-text h2 { font-size: clamp(2rem, 8vw, 5rem); }
-            .footer-credit { bottom: 5%; }
+            .footer-credit { 
+                position: relative; 
+                bottom: auto; right: auto;
+                text-align: center;
+                padding: 1rem;
+            }
             .footer-credit a { font-size: 0.7rem; }
         }
 
@@ -821,9 +879,7 @@
             .masonry-grid { column-count: 2; }
             .overlap-grid { column-count: 2; }
             
-            .cinematic-parallax { height: 40vh; }
-            
-            .card-stack { width: 160px; height: 220px; }
+            .card-stack { grid-template-columns: repeat(3, 1fr); }
             
             .interactive-grid { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 50px; }
             .interactive-item:nth-child(n) { grid-column: span 1; grid-row: span 2; }
@@ -838,8 +894,6 @@
             .circle-grid { gap: 0.8rem; max-width: 280px; }
             
             .filmstrip-frame img { max-height: 90px; }
-            
-            .final-section { height: 50vh; }
         }
     </style>
 </head>
